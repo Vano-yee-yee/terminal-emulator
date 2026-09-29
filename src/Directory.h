@@ -11,26 +11,27 @@ namespace term_emul
 
 class Directory: public Entry
 {
-  std::vector<Entry> content_;
+  std::vector<Entry*> content_;
  public:
   using Entry::Entry;
-  Directory(const std::string& name, const std::vector<Entry>& content);
+  Directory(const std::string& name, const std::vector<Entry*>& content);
   
-  void add(const Entry& elem);
+  std::string displayName() const override;
+  
+  void add(const Entry& elem) override;
   void remove(Entry* elem);
+  std::string displayContent() const override;
   
   Entry* find(const std::string& name);
   const Entry* find(const std::string& name) const;
   
+  std::vector<Entry*>::iterator begin();
+  std::vector<Entry*>::iterator end();
+  std::vector<Entry*>::const_iterator cbegin() const;
+  std::vector<Entry*>::const_iterator cend() const;
+  
   Entry* operator[](const std::string& name);
   const Entry* operator[](const std::string& name) const;
-  
-  std::string displayName() const override;
-  
-  std::vector<Entry>::iterator begin();
-  std::vector<Entry>::iterator end();
-  std::vector<Entry>::const_iterator cbegin() const;
-  std::vector<Entry>::const_iterator cend() const;
 };
 
 } // namespace term_emul

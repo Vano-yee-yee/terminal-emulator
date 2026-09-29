@@ -26,10 +26,6 @@ void Entry::rename(const std::string& new_name)
     name_ = new_name;
   }
 }
-std::string Entry::displayName() const
-{
-  return name_;
-}
 
 bool Entry::isHidden() const
 {
@@ -56,6 +52,19 @@ void Entry::unhide()
 void Entry::operator+()
 {
   this -> unhide();
+}
+
+std::string Entry::displayName() const
+{
+  return name_;
+}
+
+void Entry::add(const Entry&)
+{}
+
+std::string Entry::displayContent() const
+{
+  return this -> displayName();
 }
 
 } // namespace term_emul

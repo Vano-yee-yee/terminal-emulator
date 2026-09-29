@@ -16,13 +16,15 @@ class Entry
   
   const std::string& name() const;
   void rename(const std::string& new_name);
+  virtual std::string displayName() const;
   
   bool isHidden() const;
   void hide();
   void unhide();
   
-  virtual std::string displayName() const;
-
+  virtual void add(const Entry&);
+  virtual std::string displayContent() const;
+  
   void operator+();
   void operator-();
 };

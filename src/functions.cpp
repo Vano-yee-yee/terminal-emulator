@@ -10,11 +10,11 @@ namespace func
 
 bool isValidName(const std::string& name)
 {
-  return std::none_of(name.begin(), name.end(), [](char sym)
-      {
-        return sym == '/';
-      })
-    && name != "." && name != "..";
+  return name.size() > 0 && name != "." && name != ".." && 
+    std::none_of(name.cbegin(), name.cend(), [](char sym)
+    {
+      return sym == '/';
+    });
 }
 
 } // namespace func
