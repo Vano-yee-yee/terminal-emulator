@@ -1,10 +1,10 @@
-#if !defined(TERMINAL_EMULATOR_SINGLELINEFILE_H_)
-#define TERMINAL_EMULATOR_SINGLELINEFILE_H_
+#if !defined(TERMINAL_EMULATOR_FILE_SINGLELINEFILE_H_)
+#define TERMINAL_EMULATOR_FILE_SINGLELINEFILE_H_
 
 #include <string>
 
 #include "Entry.h"
-#include "MultiLineFile.h"
+#include "file/MultiLineFile.h"
 
 namespace term_emul
 {

@@ -1,5 +1,5 @@
-#if !defined(TERMINAL_EMULATOR_DIRECTORY_H_)
-#define TERMINAL_EMULATOR_DIRECTORY_H_
+#if !defined(TERMINAL_EMULATOR_DIR_DIRECTORY_H_)
+#define TERMINAL_EMULATOR_DIR_DIRECTORY_H_
 
 #include <string>
 #include <vector>

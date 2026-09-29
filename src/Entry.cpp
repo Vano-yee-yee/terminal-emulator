@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <string>
 
-#include "Directory.h"
+#include "dir/Directory.h"
 #include "functions.h"
 
 namespace term_emul

@@ -1,10 +1,10 @@
-#if !defined(TERMINAL_EMULATOR_ROOTDIRECTORY_H_)
-#define TERMINAL_EMULATOR_ROOTDIRECTORY_H_
+#if !defined(TERMINAL_EMULATOR_DIR_ROOTDIRECTORY_H_)
+#define TERMINAL_EMULATOR_DIR_ROOTDIRECTORY_H_
 
 #include <string>
 #include <vector>
 
-#include "Directory.h"
+#include "dir/Directory.h"
 #include "Entry.h"
 
 namespace term_emul
