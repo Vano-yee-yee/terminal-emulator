@@ -16,6 +16,13 @@ bool isValidName(const std::string& name)
       return sym == '/';
     });
 }
+bool isSingleLine(const std::string& str)
+{
+  return str.size() > 0 && std::none_of(str.cbegin(), str.cend(), [](char sym)
+  {
+    return sym == '\n';
+  });
+}
 
 } // namespace func
 } // namespace term_emul

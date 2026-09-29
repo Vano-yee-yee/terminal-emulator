@@ -9,6 +9,7 @@ namespace func
 {
 
 bool isValidName(const std::string& name);
+bool isSingleLine(const std::string& str);
 
 } // namespace func
 } // namespace term_emul
