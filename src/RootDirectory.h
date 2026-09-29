@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Directory.h"
+#include "Entry.h"
 
 namespace term_emul
 {
@@ -23,7 +24,9 @@ class RootDirectory: public Directory
   void unhide() = delete;
   
   RootDirectory& operator=(const RootDirectory&) = delete;
+  using Directory::operator+;
   void operator+() = delete;
+  using Directory::operator-;  
   void operator-() = delete;
 };
 

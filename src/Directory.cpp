@@ -35,7 +35,7 @@ const Entry* Directory::find(const std::string& name) const
     {
       return e -> name() == name;
     });
-  if(it == content_.end())
+  if(it == content_.cend())
     return nullptr;
   return *it;
 }
@@ -46,14 +46,19 @@ const Entry* Directory::operator[](const std::string& name) const
 
 void Directory::add(const Entry& elem)
 {
-  if((*this)[elem.name()] == nullptr)
+  if((*this).find(elem.name()) == nullptr)
   {
     content_.push_back(new Entry(elem));
   }
 }
-void Directory::remove(Entry* elem)
+void Directory::remove(Entry& elem)
 {
-  -(*elem);
+  elem.hide();
+}
+Entry& Directory::operator-(Entry& elem)
+{
+  this -> remove(elem);
+  return *this;
 }
 
 std::string Directory::displayName() const

@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "Entry.h"
+
 namespace term_emul
 {
 

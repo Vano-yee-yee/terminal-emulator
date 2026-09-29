@@ -19,7 +19,7 @@ class Directory: public Entry
   std::string displayName() const override;
   
   void add(const Entry& elem) override;
-  void remove(Entry* elem);
+  void remove(Entry& elem);
   std::string displayContent() const override;
   
   Entry* find(const std::string& name);
@@ -32,6 +32,8 @@ class Directory: public Entry
   
   Entry* operator[](const std::string& name);
   const Entry* operator[](const std::string& name) const;
+  using Entry::operator+;
+  Entry& operator-(Entry& elem);
 };
 
 } // namespace term_emul

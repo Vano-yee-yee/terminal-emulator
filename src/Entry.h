@@ -6,14 +6,20 @@
 namespace term_emul
 {
 
+class Directory;
+
 class Entry
 {
+  Directory* dot_dir_;
  protected:
   std::string name_;
  public:
   Entry() = delete;
-  Entry(const std::string& name);
+  Entry(const std::string& name, Directory* dot_dir = nullptr);
   
+ private:
+  bool isUniqueName(const std::string& name);
+ public:
   const std::string& name() const;
   void rename(const std::string& new_name);
   virtual std::string displayName() const;
@@ -25,8 +31,9 @@ class Entry
   virtual void add(const Entry&);
   virtual std::string displayContent() const;
   
-  void operator+();
-  void operator-();
+  Entry& operator-();
+  Entry& operator+();
+  Entry& operator+(const Entry& elem);
 };
 
 } // namespace term_emul
