@@ -9,18 +9,16 @@
 namespace term_emul
 {
 
-Directory::Directory(const std::string& name): Entry(name)
+Directory::Directory(const std::string& name, const std::vector<Entry>& content)
+: Entry(name), content_(content)
 {}
-Directory::Directory(const std::string& name, 
-  const std::vector<Entry>& content): Entry(name)
-{
-  content_ = content;
-}
 
 Entry* Directory::find(const std::string& name)
 {
-  const auto it = std::find_if(content_.begin(), content_.end(), 
-    [name](Entry& e){ return e.name() == name; });
+  const auto it = std::find_if(content_.begin(), content_.end(), [name](Entry& e)
+    {
+      return e.name() == name;
+    });
   if(it == content_.end())
     return nullptr;
   return &*it;
@@ -33,7 +31,10 @@ Entry* Directory::operator[](const std::string& name)
 const Entry* Directory::find(const std::string& name) const
 {
   const auto it = std::find_if(content_.begin(), content_.end(), 
-    [name](const Entry& e){ return e.name() == name; });
+    [name](const Entry& e)
+    {
+      return e.name() == name;
+    });
   if(it == content_.end())
     return nullptr;
   return &*it;

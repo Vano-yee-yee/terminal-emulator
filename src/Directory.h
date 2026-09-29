@@ -13,8 +13,7 @@ class Directory: public Entry
 {
   std::vector<Entry> content_;
  public:
-  Directory() = delete;
-  Directory(const std::string& name);
+  using Entry::Entry;
   Directory(const std::string& name, const std::vector<Entry>& content);
   
   void add(const Entry& elem);
