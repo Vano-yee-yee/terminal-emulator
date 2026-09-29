@@ -10,12 +10,12 @@ namespace term_emul
 {
 
 Entry::Entry(const std::string& name, Directory* dot_dir)
+: dot_dir_(dot_dir)
 {
   if(func::isValidName(name))
   {
     name_ = name;
   }
-  dot_dir_ = dot_dir;
 }
 
 const std::string& Entry::name() const
@@ -56,7 +56,7 @@ void Entry::unhide()
 {
   if(this -> isHidden())
   {
-    std::string new_name = name_.substr(0);
+    std::string new_name = name_.substr(1);
     if(this -> isUniqueName(new_name))
     {
       name_ = new_name;

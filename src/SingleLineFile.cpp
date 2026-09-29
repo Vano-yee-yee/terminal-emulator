@@ -10,7 +10,6 @@ namespace term_emul
 SingleLineFile::SingleLineFile(const std::string& name, const std::string& content)
 : MultiLineFile(name)
 {
-  content_ = "";
   if(func::isSingleLine(content))
   {
     content_ = content;
