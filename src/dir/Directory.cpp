@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <string>
+#include <typeinfo>
 #include <vector>
 
+#include "dir/RootDirectory.h"
 #include "Entry.h"
 
 namespace term_emul
@@ -50,9 +52,16 @@ const Entry& Directory::operator[](const std::string& name) const
 
 void Directory::add(const Entry& elem)
 {
-  if(this -> find(elem.name()) == nullptr)
+  try
   {
-    content_.push_back(new Entry(elem));
+    dynamic_cast<const RootDirectory&>(elem);
+  }
+  catch(std::bad_cast)
+  {
+    if(this -> find(elem.name()) == nullptr)
+    {
+      content_.push_back(new Entry(elem));
+    }
   }
 }
 void Directory::remove(Entry& elem)
