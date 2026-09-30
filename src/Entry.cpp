@@ -9,8 +9,8 @@
 namespace term_emul
 {
 
-Entry::Entry(const std::string& name, Directory* dot_dir)
-: dot_dir_(dot_dir)
+Entry::Entry(const std::string& name, Directory* current_dir)
+: curent_dir_(current_dir)
 {
   if(func::isValidName(name))
   {
@@ -18,7 +18,7 @@ Entry::Entry(const std::string& name, Directory* dot_dir)
   }
 }
 
-const std::string& Entry::name() const
+const std::string& Entry::name() const noexcept
 {
   return name_;
 }
@@ -30,7 +30,7 @@ void Entry::rename(const std::string& new_name)
   }
 }
 
-bool Entry::isHidden() const
+bool Entry::isHidden() const noexcept
 {
   return name_.size() != 0 && name_[0] == '.';
 }
@@ -89,11 +89,12 @@ std::string Entry::displayContent() const
 
 bool Entry::isUniqueName(const std::string& name)
 {
-  return dot_dir_ == nullptr || dot_dir_ != nullptr && 
-    std::none_of(dot_dir_ -> cbegin(), dot_dir_ -> cend(), [&name](const Entry* e)
-    {
-      return e -> name() == name;
-    });
+  return curent_dir_ == nullptr || curent_dir_ != nullptr && 
+    std::none_of(curent_dir_ -> cbegin(), curent_dir_ -> cend(), 
+      [&name](const Entry* e)
+      {
+        return e -> name() == name;
+      });
 }
 
 } // namespace term_emul

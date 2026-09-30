@@ -10,21 +10,21 @@ class Directory;
 
 class Entry
 {
-  Directory* dot_dir_;
+  Directory* curent_dir_;
  protected:
   std::string name_;
  public:
   Entry() = delete;
-  Entry(const std::string& name, Directory* dot_dir = nullptr);
+  Entry(const std::string& name, Directory* current_dir = nullptr);
   
  private:
   bool isUniqueName(const std::string& name);
  public:
-  const std::string& name() const;
+  const std::string& name() const noexcept;
   void rename(const std::string& new_name);
   virtual std::string displayName() const;
   
-  bool isHidden() const;
+  bool isHidden() const noexcept;
   void hide();
   void unhide();
   

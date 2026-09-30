@@ -15,38 +15,42 @@ Directory::Directory(const std::string& name, const std::vector<Entry*>& content
 
 Entry* Directory::find(const std::string& name)
 {
-  const auto it = std::find_if(content_.begin(), content_.end(), [name](Entry* e)
+  const auto it = std::find_if(content_.begin(), content_.end(), [&name](Entry* e)
   {
     return e -> name() == name;
   });
   if(it == content_.end())
+  {
     return nullptr;
+  }
   return *it;
 }
-Entry* Directory::operator[](const std::string& name)
+Entry& Directory::operator[](const std::string& name)
 {
-  return this -> find(name);
+  return *this -> find(name);
 }
 
 const Entry* Directory::find(const std::string& name) const
 {
   const auto it = std::find_if(content_.cbegin(), content_.cend(), 
-    [name](const Entry* e)
+    [&name](const Entry* e)
     {
       return e -> name() == name;
     });
   if(it == content_.cend())
+  {
     return nullptr;
+  }
   return *it;
 }
-const Entry* Directory::operator[](const std::string& name) const
+const Entry& Directory::operator[](const std::string& name) const
 {
-  return this -> find(name);
+  return *this -> find(name);
 }
 
 void Directory::add(const Entry& elem)
 {
-  if((*this).find(elem.name()) == nullptr)
+  if(this -> find(elem.name()) == nullptr)
   {
     content_.push_back(new Entry(elem));
   }
@@ -66,19 +70,19 @@ std::string Directory::displayName() const
   return name_ + '/';
 }
 
-std::vector<Entry*>::iterator Directory::begin()
+std::vector<Entry*>::iterator Directory::begin() noexcept
 {
   return content_.begin();
 }
-std::vector<Entry*>::iterator Directory::end()
+std::vector<Entry*>::iterator Directory::end() noexcept
 {
   return content_.end();
 }
-std::vector<Entry*>::const_iterator Directory::cbegin() const
+std::vector<Entry*>::const_iterator Directory::cbegin() const noexcept
 {
   return content_.cbegin();
 }
-std::vector<Entry*>::const_iterator Directory::cend() const
+std::vector<Entry*>::const_iterator Directory::cend() const noexcept
 {
   return content_.cend();
 }

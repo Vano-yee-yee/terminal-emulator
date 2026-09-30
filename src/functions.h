@@ -2,6 +2,7 @@
 #define TERMINAL_EMULATOR_FUNCTIONS_H_
 
 #include <string>
+#include <vector>
 
 namespace term_emul
 {
@@ -9,7 +10,7 @@ namespace func
 {
 
 bool isValidName(const std::string& name);
-bool isSingleLine(const std::string& str);
+bool isSingleline(const std::string& str);
 
 } // namespace func
 } // namespace term_emul

@@ -8,13 +8,13 @@
 namespace term_emul
 {
 
-class MultiLineFile: public Entry
+class MultilineFile: public Entry
 {
  protected:
   std::string content_;
  public:
   using Entry::Entry;
-  MultiLineFile(const std::string& name, const std::string& content);
+  MultilineFile(const std::string& name, const std::string& content);
   
   std::string displayContent() const override;
   virtual void edit(const std::string& new_content);

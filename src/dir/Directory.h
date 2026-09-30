@@ -25,13 +25,13 @@ class Directory: public Entry
   Entry* find(const std::string& name);
   const Entry* find(const std::string& name) const;
   
-  std::vector<Entry*>::iterator begin();
-  std::vector<Entry*>::iterator end();
-  std::vector<Entry*>::const_iterator cbegin() const;
-  std::vector<Entry*>::const_iterator cend() const;
+  std::vector<Entry*>::iterator begin() noexcept;
+  std::vector<Entry*>::iterator end() noexcept;
+  std::vector<Entry*>::const_iterator cbegin() const noexcept;
+  std::vector<Entry*>::const_iterator cend() const noexcept;
   
-  Entry* operator[](const std::string& name);
-  const Entry* operator[](const std::string& name) const;
+  Entry& operator[](const std::string& name);
+  const Entry& operator[](const std::string& name) const;
   using Entry::operator+;
   Entry& operator-(Entry& elem);
 };
