@@ -10,7 +10,7 @@ class Directory;
 
 class Entry
 {
-  Directory* curent_dir_;
+  Directory* current_dir_;
  protected:
   std::string name_;
  public:
