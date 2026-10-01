@@ -32,7 +32,6 @@ class Directory: public Entry
   
   Entry& operator[](const std::string& name);
   const Entry& operator[](const std::string& name) const;
-  using Entry::operator+;
   Entry& operator-(Entry& elem);
 };
 

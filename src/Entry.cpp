@@ -97,4 +97,7 @@ bool Entry::isUniqueName(const std::string& name)
       });
 }
 
+void Entry::edit(const std::string& new_content)
+{}
+
 } // namespace term_emul

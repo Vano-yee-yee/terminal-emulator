@@ -17,7 +17,7 @@ class MultilineFile: public Entry
   MultilineFile(const std::string& name, const std::string& content);
   
   std::string displayContent() const override;
-  virtual void edit(const std::string& new_content);
+  void edit(const std::string& new_content) override;
 };
 
 } // namespace term_emul

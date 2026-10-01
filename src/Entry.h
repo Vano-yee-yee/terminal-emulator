@@ -29,6 +29,7 @@ class Entry
   void unhide();
   
   virtual void add(const Entry&);
+  virtual void edit(const std::string& new_content);
   virtual std::string displayContent() const;
   
   Entry& operator-();
