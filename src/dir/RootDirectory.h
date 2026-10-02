@@ -13,6 +13,7 @@ namespace term_emul
 class RootDirectory: public Directory
 {
  public:
+  RootDirectory();
   RootDirectory(const std::vector<Entry*>& content);
   
   void rename(const std::string& new_name) = delete;
@@ -22,7 +23,7 @@ class RootDirectory: public Directory
   
   using Directory::operator+;
   void operator+() = delete;
-  using Directory::operator-;  
+  using Directory::operator-;
   void operator-() = delete;
 };
 

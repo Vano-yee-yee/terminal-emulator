@@ -2,13 +2,16 @@
 
 #include <string>
 
+#include "dir/Directory.h"
+#include "file/MultilineFile.h"
 #include "functions.h"
 
 namespace term_emul
 {
 
-SinglelineFile::SinglelineFile(const std::string& name, const std::string& content)
-: MultilineFile(name)
+SinglelineFile::SinglelineFile(const std::string& name, const std::string& content,
+  Directory* current_dir)
+: MultilineFile(name, current_dir)
 {
   if(func::isSingleline(content))
   {

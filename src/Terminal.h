@@ -4,14 +4,9 @@
 #include <iostream>
 #include <istream>
 #include <ostream>
-#include <string>
 
 #include "dir/Directory.h"
 #include "dir/RootDirectory.h"
-/*
-#include "Entry.h"
-#include "file/MultilineFile.h"
-*/
 
 namespace term_emul
 {
@@ -19,21 +14,23 @@ namespace term_emul
 class Terminal
 {
   RootDirectory root_;
-  Directory current_;
+  Directory& current_;
   
   std::istream in_;
   std::ostream out_;
+  
  public:
-  Terminal() = delete;
   Terminal(Terminal&) = delete;
   Terminal(Terminal&&) = delete;
-  Terminal(RootDirectory&& root, 
-    const std::ostream& out = std::ostream(std::cout.rdbuf()),
-    const std::istream& in = std::istream(std::cin.rdbuf()) );
+  Terminal(RootDirectory&& root = RootDirectory(), 
+    std::ostream& out = std::cout, 
+    std::istream& in = std::cin);
+  Terminal(std::ostream& out, std::istream& in = std::cin);
+  Terminal(std::istream& in);
   
-  private:
+ private:
   void help() noexcept;
-  public:
+ public:
   void run();
   
   Terminal& operator=(const Terminal&) = delete;

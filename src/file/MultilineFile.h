@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "dir/Directory.h"
 #include "Entry.h"
 
 namespace term_emul
@@ -12,9 +13,11 @@ class MultilineFile: public Entry
 {
  protected:
   std::string content_;
+  
  public:
   using Entry::Entry;
-  MultilineFile(const std::string& name, const std::string& content);
+  MultilineFile(const std::string& name, const std::string& content, 
+    Directory* current_dir = nullptr);
   
   std::string displayContent() const override;
   void edit(const std::string& new_content) override;

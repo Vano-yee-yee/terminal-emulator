@@ -1,12 +1,12 @@
 #include "Terminal.h"
 
+#include <iostream>
 #include <istream>
 #include <ostream>
 #include <sstream>
 #include <string>
 #include <utility>
 
-#include "dir/Directory.h"
 #include "dir/RootDirectory.h"
 
 namespace term_emul
@@ -16,12 +16,17 @@ Terminal::Terminal(RootDirectory&& root, const std::ostream& out,
   const std::istream& in)
 : root_(std::move(root)), current_(root), out_(out.rdbuf()), in_(in.rdbuf())
 {}
+Terminal::Terminal(const std::ostream& out, const std::istream& in)
+: Terminal(RootDirectory(), out, in)
+{}
+Terminal::Terminal(const std::istream& in)
+: Terminal(std::cout, in)
+{}
 
 void Terminal::run()
 {
   std::string str;
-  while(out_ << "root " << current_.displayName() << " # ", 
-    std::getline(in_, str))
+  while(out_ << current_.displayName() << " # ", std::getline(in_, str))
   {
     std::istringstream sstr(str);
     sstr >> str;
@@ -33,6 +38,19 @@ void Terminal::run()
     {
       this -> help();
     }
+    else if(str == "ls")
+    {
+      // maybe use std::for_each with std::istream_iterator
+      while(sstr >> str)
+      {
+        
+      }
+    }
+/*    else if(str == "cd")
+    {
+      sstr >> str;
+      this -> cd(str);
+    }*/
     else if(str.size() > 0)
     {
       out_ << str << ": unknown command. Use help for possible commands" 
@@ -54,7 +72,7 @@ void Terminal::help() noexcept
       "\nrm <path>                    Remove(hide) file or directory"
       "\nrestore <path>               Recover file or directory"
       "\nmv <path> <path2>            Move file or directory to other"
-        " location <path2>" 
+        " location <path2>"
       "\nedit <file> <str>            Change content of file to <str>\n"
     << std::endl;
 }

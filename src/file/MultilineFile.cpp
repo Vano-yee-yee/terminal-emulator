@@ -2,11 +2,15 @@
 
 #include <string>
 
+#include "dir/Directory.h"
+#include "Entry.h"
+
 namespace term_emul
 {
 
-MultilineFile::MultilineFile(const std::string& name, const std::string& content)
-: Entry(name), content_(content)
+MultilineFile::MultilineFile(const std::string& name, const std::string& content,
+  Directory* current_dir)
+: Entry(name, current_dir), content_(content)
 {}
 
 std::string MultilineFile::displayContent() const
