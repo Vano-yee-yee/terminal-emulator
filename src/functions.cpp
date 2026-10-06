@@ -41,11 +41,18 @@ bool isSingleline(const std::string& str)
 std::vector<std::string> delim_path(const std::string& path)
 {
   std::vector<std::string> res;
-  std::istringstream ss(path);
-  std::string str;
-  while(std::getline(ss, str, '/'))
+  if(path.size() > 0 && path[0] == '/')
   {
-    res.push_back(str);
+    res.push_back("/");
+  }
+  
+  std::istringstream ss(path);
+  for(std::string str; std::getline(ss, str, '/');)
+  {
+    if(str != "")
+    {
+      res.push_back(str);
+    }
   }
   return res;
 }
