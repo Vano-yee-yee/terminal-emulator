@@ -1,7 +1,7 @@
 #if !defined(TERMINAL_EMULATOR_TERMINAL_H_)
 #define TERMINAL_EMULATOR_TERMINAL_H_
 
-#include <iostream>
+#include <iostream> // cout cin
 #include <istream>
 #include <ostream>
 

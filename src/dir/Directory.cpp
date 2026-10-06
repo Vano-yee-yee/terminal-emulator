@@ -1,8 +1,8 @@
 #include "dir/Directory.h"
 
-#include <algorithm>
+#include <algorithm> // find_if for_each
 #include <string>
-#include <typeinfo>
+#include <typeinfo> // bad_cast
 #include <vector>
 
 #include "dir/RootDirectory.h"

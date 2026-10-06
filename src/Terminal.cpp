@@ -1,11 +1,11 @@
 #include "Terminal.h"
 
-#include <iostream>
+#include <iostream> // cout
 #include <istream>
 #include <ostream>
-#include <sstream>
-#include <string>
-#include <utility>
+#include <sstream> // istringstream
+#include <string> // string getline
+#include <utility> // move
 
 #include "dir/RootDirectory.h"
 
@@ -61,7 +61,7 @@ void Terminal::run()
 
 void Terminal::help() noexcept
 {
-  out_ << "Terminal poor beta.\n"
+  out_ << "Terminal poor alpha\n"
       "\nhelp                         Print avaible command info"
       "\nexit                         Terminate command proccessor"
       "\nls <path>                    Show information about files"

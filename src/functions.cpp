@@ -1,8 +1,8 @@
 #include "functions.h"
 
-#include <algorithm>
-#include <sstream>
-#include <string>
+#include <algorithm> // none_of
+#include <sstream> // istringstream
+#include <string> // string getline
 #include <vector>
 
 #include "dir/Directory.h"
