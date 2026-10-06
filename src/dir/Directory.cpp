@@ -80,7 +80,7 @@ void Directory::remove(const Entry& elem)
     ef -> hide();
   }
 }
-Directory& Directory::operator-(Entry& elem)
+Directory& Directory::operator-(const Entry& elem)
 {
   this -> remove(elem);
   return *this;
@@ -108,7 +108,7 @@ Directory::const_iterator Directory::cend() const noexcept
   return content_.cend();
 }
 
-std::string Directory::displayContent() const
+std::string Directory::display() const
 {
   std::string res;
   std::for_each(this -> cbegin(), this -> cend(), [&res](const Entry* e)

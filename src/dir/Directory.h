@@ -22,7 +22,7 @@ class Directory: public Entry
  public:
   using Entry::Entry;
   Directory(const std::string& name, const Container& content, 
-    Directory* current_dir = nullptr);
+    Directory* current_dir);
   
   iterator begin() noexcept;
   iterator end() noexcept;
@@ -36,12 +36,12 @@ class Directory: public Entry
   
   void add(const Entry& elem);
   void remove(const Entry& elem);
-  std::string displayContent() const override;
+  std::string display() const override;
   
   Entry& operator[](const std::string& name);
   const Entry& operator[](const std::string& name) const;
   Directory& operator+(const Entry& elem);
-  Directory& operator-(Entry& elem);
+  Directory& operator-(const Entry& elem);
 };
 
 } // namespace term_emul

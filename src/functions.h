@@ -13,6 +13,7 @@ namespace func
 
 bool isValidName(const std::string& name);
 bool isUniqueName(const Directory* current, const std::string& name);
+
 bool isSingleline(const std::string& str);
 
 std::vector<std::string> delim_path(const std::string& path);

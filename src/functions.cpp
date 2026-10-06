@@ -1,6 +1,6 @@
 #include "functions.h"
 
-#include <algorithm> // none_of
+#include <algorithm> // none_of find_if
 #include <sstream> // istringstream
 #include <string> // string getline
 #include <vector>
@@ -24,18 +24,18 @@ bool isValidName(const std::string& name)
 bool isUniqueName(const Directory* current, const std::string& name)
 {
   return current == nullptr || current != nullptr && 
-    std::none_of(current -> cbegin(), current -> cend(), 
-      [&name](const Entry* e)
-      {
-        return e -> name() == name;
-      });
+    std::none_of(current -> cbegin(), current -> cend(), [&name](const Entry* e)
+    {
+      return e -> name() == name;
+    });
 }
 bool isSingleline(const std::string& str)
 {
-  return str.size() > 0 && std::none_of(str.cbegin(), str.cend(), [](char sym)
+  return std::find_if(str.cbegin(), str.cend(), [](char sym)
   {
     return sym == '\n';
-  });
+  })
+  == str.cend();
 }
 
 std::vector<std::string> delim_path(const std::string& path)
@@ -46,12 +46,12 @@ std::vector<std::string> delim_path(const std::string& path)
     res.push_back("/");
   }
   
-  std::istringstream ss(path);
-  for(std::string str; std::getline(ss, str, '/');)
+  std::istringstream path_stream(path);
+  for(std::string path_elem; std::getline(path_stream, path_elem, '/');)
   {
-    if(str != "")
+    if(path_elem != "")
     {
-      res.push_back(str);
+      res.push_back(path_elem);
     }
   }
   return res;

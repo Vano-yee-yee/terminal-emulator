@@ -32,28 +32,22 @@ void Entry::rename(const std::string& new_name)
 
 bool Entry::isHidden() const noexcept
 {
-  return name_.size() > 0 && name_[0] == '.';
+  return name_[0] == '.';
 }
 void Entry::hide()
 {
-  if(!this -> isHidden())
+  const std::string new_name = std::string(".") + name_;
+  if(!this -> isHidden() && func::isUniqueName(cur_dir_, new_name))
   {
-    const std::string new_name = std::string(".") + name_;
-    if(func::isUniqueName(cur_dir_, new_name))
-    {
-      name_ = new_name;
-    }
+    name_ = new_name;
   }
 }
 void Entry::unhide()
 {
-  if(this -> isHidden())
+  const std::string new_name = name_.substr(1);
+  if(this -> isHidden() && func::isUniqueName(cur_dir_, new_name))
   {
-    const std::string new_name = name_.substr(1);
-    if(func::isUniqueName(cur_dir_, new_name))
-    {
-      name_ = new_name;
-    }
+    name_ = new_name;
   }
 }
 
@@ -63,15 +57,29 @@ std::string Entry::displayName() const
 }
 std::string Entry::displayContent() const
 {
-  return this -> displayName();
+  return std::string();
 }
 
 void Entry::edit(const std::string& new_content)
 {}
 
+Directory& Entry::back()
+{
+  return *cur_dir_;
+}
+const Directory& Entry::back() const
+{
+  return *cur_dir_;
+}
+
 std::ostream& operator<<(std::ostream& out, const Entry& ent)
 {
-  return out << ent.displayContent();
+  return out << ent.display();
+}
+
+std::string Entry::display() const
+{
+  return this -> displayName();
 }
 
 } // namespace term_emul

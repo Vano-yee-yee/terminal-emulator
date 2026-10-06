@@ -11,13 +11,13 @@ class Directory;
 
 class Entry
 {
-  Directory* cur_dir_;
  protected:
   std::string name_;
+  Directory* cur_dir_;
   
  public:
   Entry() = delete;
-  Entry(const std::string& name, Directory* current_dir = nullptr);
+  Entry(const std::string& name, Directory* current_dir);
   
   const std::string& name() const noexcept;
   void rename(const std::string& new_name);
@@ -29,6 +29,11 @@ class Entry
   
   virtual void edit(const std::string& new_content);
   virtual std::string displayContent() const;
+  
+  virtual Directory& back();
+  virtual const Directory& back() const;
+  
+  virtual std::string display() const;
 };
 
 std::ostream& operator<<(std::ostream& out, const Entry& ent);
