@@ -1,6 +1,7 @@
 #if !defined(TERMINAL_EMULATOR_ENTRY_H_)
 #define TERMINAL_EMULATOR_ENTRY_H_
 
+#include <ostream>
 #include <string>
 
 namespace term_emul
@@ -28,10 +29,9 @@ class Entry
   
   virtual void edit(const std::string& new_content);
   virtual std::string displayContent() const;
-  
-  Entry& operator-();
-  Entry& operator+();
 };
+
+std::ostream& operator<<(std::ostream& out, const Entry& ent);
 
 } // namespace term_emul
 

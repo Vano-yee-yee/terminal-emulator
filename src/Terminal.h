@@ -23,10 +23,10 @@ class Terminal
   Terminal(Terminal&) = delete;
   Terminal(Terminal&&) = delete;
   Terminal(RootDirectory&& root = RootDirectory(), 
-    std::ostream& out = std::cout, 
-    std::istream& in = std::cin);
-  Terminal(std::ostream& out, std::istream& in = std::cin);
-  Terminal(std::istream& in);
+    const std::ostream& out = std::cout, 
+    const std::istream& in = std::cin);
+  Terminal(const std::ostream& out, const std::istream& in = std::cin);
+  Terminal(const std::istream& in);
   
  private:
   void help() noexcept;

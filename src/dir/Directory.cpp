@@ -22,7 +22,7 @@ Entry* Directory::find(const std::string& name)
   {
     return e -> name() == name;
   });
-  if(it == content_.end())
+  if(it == this -> end())
   {
     return nullptr;
   }
@@ -40,7 +40,7 @@ const Entry* Directory::find(const std::string& name) const
     {
       return e -> name() == name;
     });
-  if(it == content_.cend())
+  if(it == this -> cend())
   {
     return nullptr;
   }

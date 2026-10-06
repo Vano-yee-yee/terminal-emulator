@@ -1,5 +1,6 @@
 #include "Entry.h"
 
+#include <ostream>
 #include <string>
 
 #include "dir/Directory.h"
@@ -33,39 +34,27 @@ bool Entry::isHidden() const noexcept
 {
   return name_.size() > 0 && name_[0] == '.';
 }
-
 void Entry::hide()
 {
   if(!this -> isHidden())
   {
-    std::string new_name = std::string(".") + name_;
+    const std::string new_name = std::string(".") + name_;
     if(func::isUniqueName(cur_dir_, new_name))
     {
       name_ = new_name;
     }
   }
 }
-Entry& Entry::operator-()
-{
-  this -> hide();
-  return *this;
-}
-
 void Entry::unhide()
 {
   if(this -> isHidden())
   {
-    std::string new_name = name_.substr(1);
+    const std::string new_name = name_.substr(1);
     if(func::isUniqueName(cur_dir_, new_name))
     {
       name_ = new_name;
     }
   }
-}
-Entry& Entry::operator+()
-{
-  this -> unhide();
-  return *this;
 }
 
 std::string Entry::displayName() const
@@ -79,5 +68,10 @@ std::string Entry::displayContent() const
 
 void Entry::edit(const std::string& new_content)
 {}
+
+std::ostream& operator<<(std::ostream& out, const Entry& ent)
+{
+  return out << ent.displayContent();
+}
 
 } // namespace term_emul
