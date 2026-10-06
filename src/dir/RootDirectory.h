@@ -14,7 +14,7 @@ class RootDirectory: public Directory
 {
  public:
   RootDirectory();
-  RootDirectory(const std::vector<Entry*>& content);
+  RootDirectory(const Container& content);
   
   void rename(const std::string&) = delete;
   

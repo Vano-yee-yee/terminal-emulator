@@ -18,7 +18,7 @@ Directory::Directory(const std::string& name, const Directory::Container& conten
 
 Entry* Directory::find(const std::string& name)
 {
-  const Directory::iterator it = std::find_if(this -> begin(), this -> end(), 
+  const iterator it = std::find_if(this -> begin(), this -> end(), 
     [&name](Entry* e)
     {
       return e -> name() == name;
@@ -36,7 +36,7 @@ Entry& Directory::operator[](const std::string& name)
 
 const Entry* Directory::find(const std::string& name) const
 {
-  const Directory::const_iterator it = std::find_if(this -> cbegin(), this -> cend(), 
+  const const_iterator it = std::find_if(this -> cbegin(), this -> cend(), 
     [&name](const Entry* e)
     {
       return e -> name() == name;

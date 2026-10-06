@@ -13,7 +13,7 @@ RootDirectory::RootDirectory()
 {
   name_ = "/";
 }
-RootDirectory::RootDirectory(const std::vector<Entry*>& content)
+RootDirectory::RootDirectory(const Container& content)
 : Directory("", content)
 {
   name_ = "/";
