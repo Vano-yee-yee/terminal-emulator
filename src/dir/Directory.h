@@ -11,17 +11,23 @@ namespace term_emul
 
 class Directory: public Entry
 {
-  std::vector<Entry*> content_;
+ public:
+  using Container = std::vector<Entry*>;
+  using iterator = Container::iterator;
+  using const_iterator = Container::const_iterator;
+  
+ private:
+  Container content_;
   
  public:
   using Entry::Entry;
-  Directory(const std::string& name, const std::vector<Entry*>& content, 
+  Directory(const std::string& name, const Container& content, 
     Directory* current_dir = nullptr);
   
-  std::vector<Entry*>::iterator begin() noexcept;
-  std::vector<Entry*>::iterator end() noexcept;
-  std::vector<Entry*>::const_iterator cbegin() const noexcept;
-  std::vector<Entry*>::const_iterator cend() const noexcept;
+  iterator begin() noexcept;
+  iterator end() noexcept;
+  const_iterator cbegin() const noexcept;
+  const_iterator cend() const noexcept;
   
   Entry* find(const std::string& name);
   const Entry* find(const std::string& name) const;

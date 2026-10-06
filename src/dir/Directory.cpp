@@ -11,17 +11,18 @@
 namespace term_emul
 {
 
-Directory::Directory(const std::string& name, const std::vector<Entry*>& content,
+Directory::Directory(const std::string& name, const Directory::Container& content,
   Directory* current_dir)
 : Entry(name, current_dir), content_(content)
 {}
 
 Entry* Directory::find(const std::string& name)
 {
-  const auto it = std::find_if(this -> begin(), this -> end(), [&name](Entry* e)
-  {
-    return e -> name() == name;
-  });
+  const Directory::iterator it = std::find_if(this -> begin(), this -> end(), 
+    [&name](Entry* e)
+    {
+      return e -> name() == name;
+    });
   if(it == this -> end())
   {
     return nullptr;
@@ -35,7 +36,7 @@ Entry& Directory::operator[](const std::string& name)
 
 const Entry* Directory::find(const std::string& name) const
 {
-  const auto it = std::find_if(this -> cbegin(), this -> cend(), 
+  const Directory::const_iterator it = std::find_if(this -> cbegin(), this -> cend(), 
     [&name](const Entry* e)
     {
       return e -> name() == name;
@@ -90,19 +91,19 @@ std::string Directory::displayName() const
   return name_ + '/';
 }
 
-std::vector<Entry*>::iterator Directory::begin() noexcept
+Directory::iterator Directory::begin() noexcept
 {
   return content_.begin();
 }
-std::vector<Entry*>::iterator Directory::end() noexcept
+Directory::iterator Directory::end() noexcept
 {
   return content_.end();
 }
-std::vector<Entry*>::const_iterator Directory::cbegin() const noexcept
+Directory::const_iterator Directory::cbegin() const noexcept
 {
   return content_.cbegin();
 }
-std::vector<Entry*>::const_iterator Directory::cend() const noexcept
+Directory::const_iterator Directory::cend() const noexcept
 {
   return content_.cend();
 }
