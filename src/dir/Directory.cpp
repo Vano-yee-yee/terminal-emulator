@@ -2,7 +2,6 @@
 
 #include <algorithm> // find_if for_each
 #include <string>
-#include <typeinfo> // bad_cast
 #include <vector>
 
 #include "dir/RootDirectory.h"
@@ -50,26 +49,6 @@ const Entry* Directory::find(const std::string& name) const
 const Entry& Directory::operator[](const std::string& name) const
 {
   return *this -> find(name);
-}
-
-void Directory::add(const Entry& elem)
-{
-  try
-  {
-    dynamic_cast<const RootDirectory&>(elem);
-  }
-  catch(std::bad_cast)
-  {
-    if(this -> find(elem.name()) == nullptr)
-    {
-      content_.push_back(new Entry(elem));
-    }
-  }
-}
-Directory& Directory::operator+(const Entry& elem)
-{
-  this -> add(elem);
-  return *this;
 }
 
 void Directory::remove(const Entry& elem)
