@@ -36,18 +36,16 @@ bool Entry::isHidden() const noexcept
 }
 void Entry::hide()
 {
-  const std::string new_name = std::string(".") + name_;
-  if(!this -> isHidden() && func::isUniqueName(cur_dir_, new_name))
+  if(!this -> isHidden())
   {
-    name_ = new_name;
+    this -> rename(std::string(".") + name_);
   }
 }
 void Entry::unhide()
 {
-  const std::string new_name = name_.substr(1);
-  if(this -> isHidden() && func::isUniqueName(cur_dir_, new_name))
+  if(this -> isHidden())
   {
-    name_ = new_name;
+    this -> rename(name_.substr(1));
   }
 }
 

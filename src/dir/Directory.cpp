@@ -58,7 +58,7 @@ Directory& Directory::operator-(const Entry& elem)
 
 std::string Directory::displayName() const
 {
-  return std::string("'") + name_ + "'/";
+  return std::string("'") + this -> name() + "'/";
 }
 
 Directory::iterator Directory::begin() noexcept

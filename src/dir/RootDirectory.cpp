@@ -21,7 +21,7 @@ RootDirectory::RootDirectory(const Container& content)
 
 std::string RootDirectory::displayName() const
 {
-  return std::string("'") + name_ + '\'';
+  return std::string("'") + this -> name() + '\'';
 }
 
 } // namespace term_emul

@@ -11,9 +11,9 @@ class Directory;
 
 class Entry
 {
+  Directory& cur_dir_;
  protected:
   std::string name_;
-  Directory& cur_dir_;
   
  public:
   Entry() = delete;
