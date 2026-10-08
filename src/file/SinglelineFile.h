@@ -13,7 +13,7 @@ class SinglelineFile: public MultilineFile
 {
  public:
    SinglelineFile(const std::string& name, const std::string& content,
-     Directory* current_dir);
+     Directory& current_dir);
    
    void edit(const std::string& new_content) override;
 };

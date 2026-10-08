@@ -17,7 +17,7 @@ class MultilineFile: public Entry
  public:
   using Entry::Entry;
   MultilineFile(const std::string& name, const std::string& content, 
-    Directory* current_dir);
+    Directory& current_dir);
   
   void edit(const std::string& new_content) override;
   std::string displayContent() const override;

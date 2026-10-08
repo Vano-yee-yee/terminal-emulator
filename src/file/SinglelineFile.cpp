@@ -10,7 +10,7 @@ namespace term_emul
 {
 
 SinglelineFile::SinglelineFile(const std::string& name, const std::string& content,
-  Directory* current_dir)
+  Directory& current_dir)
 : MultilineFile(name, current_dir)
 {
   if(func::isSingleline(content))

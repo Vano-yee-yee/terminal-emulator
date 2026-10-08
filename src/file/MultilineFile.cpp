@@ -9,7 +9,7 @@ namespace term_emul
 {
 
 MultilineFile::MultilineFile(const std::string& name, const std::string& content,
-  Directory* current_dir)
+  Directory& current_dir)
 : Entry(name, current_dir), content_(content)
 {}
 

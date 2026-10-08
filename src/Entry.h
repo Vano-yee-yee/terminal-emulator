@@ -13,15 +13,16 @@ class Entry
 {
  protected:
   std::string name_;
-  Directory* cur_dir_;
+  Directory& cur_dir_;
   
  public:
   Entry() = delete;
-  Entry(const std::string& name, Directory* current_dir);
+  Entry(const std::string& name, Directory& current_dir);
   
   const std::string& name() const noexcept;
   void rename(const std::string& new_name);
   virtual std::string displayName() const;
+  std::string fullName() const;
   
   bool isHidden() const noexcept;
   void hide();
@@ -30,10 +31,15 @@ class Entry
   virtual void edit(const std::string& new_content);
   virtual std::string displayContent() const;
   
-  virtual Directory& back();
-  virtual const Directory& back() const;
+  Directory& back();
+  const Directory& back() const;
+  virtual Entry& next(const std::string& child_name);
+  virtual const Entry& next(const std::string& child_name) const;
   
   virtual std::string display() const;
+  
+  bool operator==(const Entry& ent) const;
+  bool operator!=(const Entry&) const = default;
 };
 
 std::ostream& operator<<(std::ostream& out, const Entry& ent);

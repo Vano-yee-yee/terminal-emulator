@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "dir/Directory.h"
-#include "Entry.h"
 
 namespace term_emul
 {
@@ -21,9 +20,6 @@ class RootDirectory: public Directory
   
   void hide() = delete;
   void unhide() = delete;
-  
-  Directory& back() override;
-  const Directory& back() const override;
 };
 
 } // namespace term_emul

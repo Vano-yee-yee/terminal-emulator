@@ -21,10 +21,10 @@ bool isValidName(const std::string& name)
       return sym == '/';
     });
 }
-bool isUniqueName(const Directory* current, const std::string& name)
+bool isUniqueName(const Directory& current, const std::string& name)
 {
-  return current == nullptr || current != nullptr && 
-    std::none_of(current -> cbegin(), current -> cend(), [&name](const Entry* e)
+  return std::none_of(current -> cbegin(), current -> cend(), 
+    [&name](const Entry* e)
     {
       return e -> name() == name;
     });

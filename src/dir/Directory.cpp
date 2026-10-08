@@ -11,52 +11,43 @@ namespace term_emul
 {
 
 Directory::Directory(const std::string& name, const Directory::Container& content,
-  Directory* current_dir)
+  Directory& current_dir)
 : Entry(name, current_dir), content_(content)
 {}
 
-Entry* Directory::find(const std::string& name)
+Entry& Directory::next(const std::string& child_name)
 {
   const iterator it = std::find_if(this -> begin(), this -> end(), 
-    [&name](Entry* e)
+    [&child_name](Entry* e)
     {
-      return e -> name() == name;
+      return e -> name() == child_name;
     });
   if(it == this -> end())
   {
-    return nullptr;
+    return *this;
   }
-  return *it;
+  return **it;
 }
-Entry& Directory::operator[](const std::string& name)
-{
-  return *this -> find(name);
-}
-
-const Entry* Directory::find(const std::string& name) const
+const Entry& Directory::next(const std::string& child_name) const
 {
   const const_iterator it = std::find_if(this -> cbegin(), this -> cend(), 
-    [&name](const Entry* e)
+    [&child_name](const Entry* e)
     {
-      return e -> name() == name;
+      return e -> name() == child_name;
     });
   if(it == this -> cend())
   {
-    return nullptr;
+    return *this;
   }
-  return *it;
-}
-const Entry& Directory::operator[](const std::string& name) const
-{
-  return *this -> find(name);
+  return **it;
 }
 
 void Directory::remove(const Entry& elem)
 {
-  Entry* ef = this -> find(elem.name());
-  if(ef != nullptr)
+  Entry& ef = this -> next(elem.name());
+  if(ef != *this)
   {
-    ef -> hide();
+    ef.hide();
   }
 }
 Directory& Directory::operator-(const Entry& elem)
@@ -67,7 +58,7 @@ Directory& Directory::operator-(const Entry& elem)
 
 std::string Directory::displayName() const
 {
-  return name_ + '/';
+  return std::string("'") + name_ + "'/";
 }
 
 Directory::iterator Directory::begin() noexcept
