@@ -21,7 +21,6 @@ bool isValidName(const std::string& name)
       return sym == '/';
     });
 }
-
 bool isSingleline(const std::string& str)
 {
   return std::find_if(str.cbegin(), str.cend(), [](char sym)
@@ -30,7 +29,6 @@ bool isSingleline(const std::string& str)
   })
   == str.cend();
 }
-
 std::vector<std::string> delim_path(const std::string& path)
 {
   std::vector<std::string> res;

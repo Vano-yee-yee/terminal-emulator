@@ -27,19 +27,6 @@ Entry& Directory::next(const std::string& child_name)
   }
   return **it;
 }
-/*const Entry& Directory::next(const std::string& child_name) const
-{
-  const const_iterator it = std::find_if(this -> cbegin(), this -> cend(), 
-    [&child_name](const Entry* e)
-    {
-      return e -> name() == child_name;
-    });
-  if(it == this -> cend())
-  {
-    return *this;
-  }
-  return **it;
-}*/
 
 void Directory::remove(const Entry& elem)
 {
@@ -57,7 +44,7 @@ Directory& Directory::operator-(const Entry& elem)
 
 std::string Directory::displayName() const
 {
-  return std::string("'") + this -> name() + "'/";
+  return Entry::displayName() + '/';
 }
 
 Directory::iterator Directory::begin() noexcept

@@ -1,5 +1,6 @@
 #include "Entry.h"
 
+#include <algorithm> // for_each
 #include <ostream>
 #include <string>
 
@@ -53,7 +54,35 @@ void Entry::unhide()
 
 std::string Entry::displayName() const
 {
-  return std::string("'") + name_ + '\'';
+  std::string res("'");
+  bool in_quotes = true;
+  std::for_each(name_.cbegin(), name_.cend(), [&res, &in_quotes](char sym)
+  {
+    if(sym == '\'')
+    {
+      if(in_quotes)
+      {
+        in_quotes = false;
+        res += '\'';
+      }
+      res += '\\';
+      res += sym;
+    }
+    else
+    {
+      if(!in_quotes)
+      {
+        in_quotes = true;
+        res += '\'';
+      }
+      res += sym;
+    }
+  });
+  if(res[res.size() - 1] != '\'')
+  {
+    res += '\'';
+  }
+  return res;
 }
 std::string Entry::displayContent() const
 {

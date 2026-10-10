@@ -36,7 +36,6 @@ class Directory: public Entry
   const_iterator cend() const noexcept;
   
   Entry& next(const std::string& child_name) override;
-//  const Entry& next(const std::string& child_name) const override;
   
   template <typename T = Entry>
   requires (!std::same_as<T, RootDirectory> && std::derived_from<T, Entry>)
