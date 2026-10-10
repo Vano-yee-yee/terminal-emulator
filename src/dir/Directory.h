@@ -28,6 +28,7 @@ class Directory: public Entry
     Directory& current_dir);
   
   std::string displayName() const override;
+  bool isUniqueName(const std::string& name);
   
   iterator begin() noexcept;
   iterator end() noexcept;

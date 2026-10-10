@@ -1,6 +1,6 @@
 #include "dir/Directory.h"
 
-#include <algorithm> // find_if for_each
+#include <algorithm> // find_if for_each none_of
 #include <string>
 #include <vector>
 
@@ -86,6 +86,15 @@ std::string Directory::display() const
     res += e -> displayName() + ' ';
   });
   return res;
+}
+
+bool Directory::isUniqueName(const std::string& name)
+{
+  return std::none_of(this -> cbegin(), this -> cend(), 
+    [&name](const Entry* e)
+    {
+      return e -> name() == name;
+    });
 }
 
 } // namespace term_emul

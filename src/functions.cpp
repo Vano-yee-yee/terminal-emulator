@@ -21,14 +21,7 @@ bool isValidName(const std::string& name)
       return sym == '/';
     });
 }
-bool isUniqueName(const Directory& current, const std::string& name)
-{
-  return std::none_of(current.cbegin(), current.cend(), 
-    [&name](const Entry* e)
-    {
-      return e -> name() == name;
-    });
-}
+
 bool isSingleline(const std::string& str)
 {
   return std::find_if(str.cbegin(), str.cend(), [](char sym)

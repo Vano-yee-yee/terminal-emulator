@@ -24,7 +24,7 @@ const std::string& Entry::name() const noexcept
 }
 void Entry::rename(const std::string& new_name)
 {
-  if(func::isValidName(new_name) && func::isUniqueName(cur_dir_, new_name))
+  if(func::isValidName(new_name) && cur_dir_.isUniqueName(new_name))
   {
     name_ = new_name;
   }
