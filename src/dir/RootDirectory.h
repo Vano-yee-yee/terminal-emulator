@@ -2,7 +2,6 @@
 #define TERMINAL_EMULATOR_DIR_ROOTDIRECTORY_H_
 
 #include <string>
-#include <vector>
 
 #include "dir/Directory.h"
 

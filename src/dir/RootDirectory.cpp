@@ -1,7 +1,6 @@
 #include "dir/RootDirectory.h"
 
 #include <string>
-#include <vector>
 
 #include "dir/Directory.h"
 
@@ -21,7 +20,7 @@ RootDirectory::RootDirectory(const Container& content)
 
 std::string RootDirectory::displayName() const
 {
-  return std::string("'") + this -> name() + '\'';
+  return this -> name();
 }
 
 } // namespace term_emul

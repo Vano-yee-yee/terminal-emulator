@@ -36,16 +36,18 @@ bool Entry::isHidden() const noexcept
 }
 void Entry::hide()
 {
-  if(!this -> isHidden())
+  const std::string hname = std::string(".") + name_;
+  if(!this -> isHidden() && cur_dir_.isUniqueName(hname))
   {
-    this -> rename(std::string(".") + name_);
+    name_ = hname;
   }
 }
 void Entry::unhide()
 {
-  if(this -> isHidden())
+  const std::string unh_name = name_.substr(1);
+  if(this -> isHidden() && cur_dir_.isUniqueName(unh_name))
   {
-    this -> rename(name_.substr(1));
+    name_ = unh_name;
   }
 }
 
@@ -67,7 +69,7 @@ Directory& Entry::back()
 }
 const Directory& Entry::back() const
 {
-  return cur_dir_;
+  return const_cast<Entry*>(this) -> back();
 }
 
 std::ostream& operator<<(std::ostream& out, const Entry& ent)
@@ -86,7 +88,7 @@ Entry& Entry::next(const std::string& child_name)
 }
 const Entry& Entry::next(const std::string& child_name) const
 {
-  return *this;
+  return const_cast<Entry*>(this) -> next(child_name);
 }
 
 std::string Entry::fullName() const

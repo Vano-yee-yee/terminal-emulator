@@ -2,7 +2,6 @@
 
 #include <algorithm> // find_if for_each none_of
 #include <string>
-#include <vector>
 
 #include "dir/RootDirectory.h"
 #include "Entry.h"
@@ -28,7 +27,7 @@ Entry& Directory::next(const std::string& child_name)
   }
   return **it;
 }
-const Entry& Directory::next(const std::string& child_name) const
+/*const Entry& Directory::next(const std::string& child_name) const
 {
   const const_iterator it = std::find_if(this -> cbegin(), this -> cend(), 
     [&child_name](const Entry* e)
@@ -40,7 +39,7 @@ const Entry& Directory::next(const std::string& child_name) const
     return *this;
   }
   return **it;
-}
+}*/
 
 void Directory::remove(const Entry& elem)
 {
@@ -88,7 +87,7 @@ std::string Directory::display() const
   return res;
 }
 
-bool Directory::isUniqueName(const std::string& name)
+bool Directory::isUniqueName(const std::string& name) const
 {
   return std::none_of(this -> cbegin(), this -> cend(), 
     [&name](const Entry* e)

@@ -34,7 +34,7 @@ class Entry
   Directory& back();
   const Directory& back() const;
   virtual Entry& next(const std::string& child_name);
-  virtual const Entry& next(const std::string& child_name) const;
+  const Entry& next(const std::string& child_name) const;
   
   virtual std::string display() const;
   
