@@ -62,12 +62,15 @@ Directory::const_iterator Directory::cend() const noexcept
   return content_.cend();
 }
 
-std::string Directory::display(DisplaySort sort_type) const
+std::string Directory::display(bool hidden, DisplaySort sort_type) const
 {
   std::vector<std::string> names;
-  std::for_each(this -> cbegin(), this -> cend(), [&names](const Entry* e)
+  std::for_each(this -> cbegin(), this -> cend(), [&names, &hidden](const Entry* e)
   {
-    names.push_back(e -> displayName());
+    if(!e -> isHidden() || e -> isHidden() && hidden)
+    {
+      names.push_back(e -> displayName());
+    }
   });
   switch(sort_type)
   {

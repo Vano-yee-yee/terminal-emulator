@@ -42,7 +42,8 @@ class Entry
   virtual Entry& next(const std::string& child_name);
   const Entry& next(const std::string& child_name) const;
   
-  virtual std::string display(DisplaySort sort_type = DisplaySort::kAsceding) const;
+  virtual std::string display(bool hidden = false, 
+    DisplaySort sort_type = DisplaySort::kAsceding) const;
   
   bool operator==(const Entry& ent) const;
   bool operator!=(const Entry&) const = default;

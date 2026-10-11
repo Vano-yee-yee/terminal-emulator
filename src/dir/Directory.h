@@ -43,7 +43,8 @@ class Directory: public Entry
   
   void remove(const std::string& name);
   void remove(const Entry& elem);
-  std::string display(DisplaySort sort_type) const override;
+  std::string display(bool hidden = false, 
+    DisplaySort sort_type = DisplaySort::kAsceding) const override;
   
   Directory& operator-(const Entry& elem);
   

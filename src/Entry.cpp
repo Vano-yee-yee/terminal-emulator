@@ -82,7 +82,7 @@ std::ostream& operator<<(std::ostream& out, const Entry& ent)
   return out << ent.display();
 }
 
-std::string Entry::display(DisplaySort sort_type) const
+std::string Entry::display(bool hidden, DisplaySort sort_type) const
 {
   return this -> displayName();
 }
