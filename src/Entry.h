@@ -9,6 +9,10 @@ namespace term_emul
 
 class Directory;
 
+enum class DisplaySort
+{
+  kNone, kAsceding, kDesceding
+};
 class Entry
 {
   Directory& cur_dir_;
@@ -22,6 +26,7 @@ class Entry
   const std::string& name() const noexcept;
   void rename(const std::string& new_name);
   virtual std::string displayName() const;
+  
   std::string fullName() const;
   
   bool isHidden() const noexcept;
@@ -36,7 +41,7 @@ class Entry
   virtual Entry& next(const std::string& child_name);
   const Entry& next(const std::string& child_name) const;
   
-  virtual std::string display() const;
+  virtual std::string display(DisplaySort sort_type = DisplaySort::kAsceding) const;
   
   bool operator==(const Entry& ent) const;
   bool operator!=(const Entry&) const = default;

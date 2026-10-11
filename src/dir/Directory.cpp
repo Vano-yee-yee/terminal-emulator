@@ -1,7 +1,9 @@
 #include "dir/Directory.h"
 
 #include <algorithm> // find_if for_each none_of
+#include <functional> // less greater
 #include <string>
+#include <vector>
 
 #include "dir/RootDirectory.h"
 #include "Entry.h"
@@ -64,12 +66,29 @@ Directory::const_iterator Directory::cend() const noexcept
   return content_.cend();
 }
 
-std::string Directory::display() const
+std::string Directory::display(DisplaySort sort_type) const
 {
-  std::string res;
-  std::for_each(this -> cbegin(), this -> cend(), [&res](const Entry* e)
+  std::vector<std::string> names;
+  std::for_each(this -> cbegin(), this -> cend(), [&names](const Entry* e)
   {
-    res += e -> displayName() + ' ';
+    names.push_back(e -> displayName());
+  });
+  switch(sort_type)
+  {
+    case DisplaySort::kAsceding:
+      std::sort(names.begin(), names.end(), std::less<std::string>{});
+      break;
+    case DisplaySort::kDesceding:
+      std::sort(names.begin(), names.end(), std::greater<std::string>{});
+      break;
+    default:
+      break;
+  }
+  
+  std::string res;
+  std::for_each(names.cbegin(), names.cend(), [&res](const std::string& str)
+  {
+    res += str + ' ';
   });
   return res;
 }

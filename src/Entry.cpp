@@ -78,7 +78,7 @@ std::string Entry::displayName() const
       res += sym;
     }
   });
-  if(res[res.size() - 1] != '\'')
+  if(in_quotes)
   {
     res += '\'';
   }
@@ -106,7 +106,7 @@ std::ostream& operator<<(std::ostream& out, const Entry& ent)
   return out << ent.display();
 }
 
-std::string Entry::display() const
+std::string Entry::display(DisplaySort sort_type) const
 {
   return this -> displayName();
 }

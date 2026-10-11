@@ -42,7 +42,7 @@ class Directory: public Entry
   void add(const T& elem);
   
   void remove(const Entry& elem);
-  std::string display() const override;
+  std::string display(DisplaySort sort_type) const override;
   
   Directory& operator-(const Entry& elem);
   
