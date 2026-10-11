@@ -41,6 +41,7 @@ class Directory: public Entry
   requires (!std::same_as<T, RootDirectory> && std::derived_from<T, Entry>)
   void add(const T& elem);
   
+  void remove(const std::string& name);
   void remove(const Entry& elem);
   std::string display(DisplaySort sort_type) const override;
   

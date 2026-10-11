@@ -32,11 +32,7 @@ Entry& Directory::next(const std::string& child_name)
 
 void Directory::remove(const Entry& elem)
 {
-  Entry& ef = this -> next(elem.name());
-  if(ef != *this)
-  {
-    ef.hide();
-  }
+  this -> remove(elem.name());
 }
 Directory& Directory::operator-(const Entry& elem)
 {
@@ -100,6 +96,15 @@ bool Directory::isUniqueName(const std::string& name) const
     {
       return e -> name() == name;
     });
+}
+
+void Directory::remove(const std::string& name)
+{
+  Entry& ef = this -> next(name);
+  if(ef != *this)
+  {
+    ef.hide();
+  }
 }
 
 } // namespace term_emul
