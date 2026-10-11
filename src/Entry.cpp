@@ -1,6 +1,5 @@
 #include "Entry.h"
 
-#include <algorithm> // for_each
 #include <ostream>
 #include <string>
 
@@ -54,31 +53,8 @@ void Entry::unhide()
 
 std::string Entry::displayName() const
 {
-  std::string res("'");
-  bool in_quotes = true;
-  std::for_each(name_.cbegin(), name_.cend(), [&res, &in_quotes](char sym)
-  {
-    if(sym == '\'')
-    {
-      if(in_quotes)
-      {
-        in_quotes = false;
-        res += '\'';
-      }
-      res += '\\';
-      res += sym;
-    }
-    else
-    {
-      if(!in_quotes)
-      {
-        in_quotes = true;
-        res += '\'';
-      }
-      res += sym;
-    }
-  });
-  if(in_quotes)
+  std::string res = std::string("'") + func::escapeQuotes(name_);
+  if(res[res.size() - 1] != '\'')
   {
     res += '\'';
   }
@@ -142,6 +118,16 @@ std::string Entry::fullName() const
 bool Entry::operator==(const Entry& ent) const
 {
   return this -> fullName() == ent.fullName();
+}
+
+std::string Entry::displayFullName() const
+{
+  std::string res = std::string("'") + func::escapeQuotes(this -> fullName());
+  if(res[res.size() - 1] != '\'')
+  {
+    res += '\'';
+  }
+  return res;
 }
 
 } // namespace term_emul

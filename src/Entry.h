@@ -28,6 +28,7 @@ class Entry
   virtual std::string displayName() const;
   
   std::string fullName() const;
+  std::string displayFullName() const;
   
   bool isHidden() const noexcept;
   void hide();
