@@ -4,6 +4,8 @@
 #include <iostream> // cout cin
 #include <istream>
 #include <ostream>
+#include <string>
+#include <vector>
 
 #include "dir/Directory.h"
 #include "dir/RootDirectory.h"
@@ -30,6 +32,8 @@ class Terminal
   
  private:
   void help() noexcept;
+  
+  bool parseCommand(std::vector<std::string>& command);
  public:
   void run();
   
