@@ -13,7 +13,7 @@ namespace func
 
 bool isValidName(const std::string& name);
 bool isSingleline(const std::string& str);
-std::vector<std::string> delim_path(const std::string& path);
+std::vector<std::string> delimPath(const std::string& path);
 std::string escapeQuotes(const std::string& str);
 
 } // namespace func

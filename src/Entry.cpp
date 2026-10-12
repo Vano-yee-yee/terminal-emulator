@@ -98,8 +98,8 @@ const Entry& Entry::next(const std::string& child_name) const
 
 std::string Entry::fullName() const
 {
-  std::string res(name_),
-    buf(name_);
+  std::string res = name_,
+    buf = name_;
   for(const Directory* dir = &this -> back(); dir -> name() != buf; 
     buf = dir -> name(), dir = &dir -> back())
   {

@@ -29,7 +29,7 @@ bool isSingleline(const std::string& str)
   })
   == str.cend();
 }
-std::vector<std::string> delim_path(const std::string& path)
+std::vector<std::string> delimPath(const std::string& path)
 {
   std::vector<std::string> res;
   if(path.size() > 0 && path[0] == '/')

@@ -11,7 +11,7 @@ class Directory;
 
 enum class DisplaySort
 {
-  kNone, kAsceding, kDesceding
+  kNone = 0, kAsceding, kDesceding
 };
 class Entry
 {
