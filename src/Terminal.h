@@ -40,7 +40,8 @@ class Terminal
   
   void Help() const noexcept;
   void Ls(std::vector<std::string>::const_iterator begin, 
-    std::vector<std::string>::const_iterator end) const;
+    std::vector<std::string>::const_iterator end, bool hidden = false,
+      DisplaySort sort = DisplaySort::kAsceding) const;
   
  public:
   void Run();

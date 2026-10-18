@@ -203,7 +203,7 @@ bool Terminal::ParseCommand(std::vector<std::string>& command) const
 }
 
 void Terminal::Ls(std::vector<std::string>::const_iterator begin, 
-  std::vector<std::string>::const_iterator end) const
+  std::vector<std::string>::const_iterator end, bool hidden, DisplaySort sort) const
 {
   switch(end - begin)
   {
@@ -219,12 +219,12 @@ void Terminal::Ls(std::vector<std::string>::const_iterator begin,
         }
         else
         {
-          out_ << (*elem) << std::endl;
+          out_ << elem -> Display(hidden, sort) << std::endl;
         }
       }
       break;
     default:
-      std::for_each(begin, end, [this](const std::string& path)
+      std::for_each(begin, end, [this, &hidden, &sort](const std::string& path)
       {
         const Entry* elem = Get(path);
         if(elem == nullptr)
@@ -233,7 +233,8 @@ void Terminal::Ls(std::vector<std::string>::const_iterator begin,
         }
         else
         {
-          out_ << elem -> DisplayFullName() << ":\n" << (*elem) << "\n\n";
+          out_ << elem -> DisplayFullName() << ":\n" << 
+            elem -> Display(hidden, sort) << "\n\n";
         }
       });
   }
