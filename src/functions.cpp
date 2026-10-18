@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "aliases.h"
-#include "Entry.h"
+#include "Entry.h" // cur_dir_
 
 namespace term_emul
 {
@@ -29,6 +29,7 @@ bool IsSingleline(const std::string& str)
     return sym == '\n';
   });
 }
+
 std::vector<std::string> DelimPath(const std::string& path)
 {
   std::vector<std::string> res;

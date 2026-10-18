@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "dir/Directory.h"
 #include "dir/RootDirectory.h"
+#include "Entry.h"
 
 namespace term_emul
 {
@@ -16,29 +16,34 @@ namespace term_emul
 class Terminal
 {
   RootDirectory root_;
-  Directory& current_;
+  CurDirT current_;
   
-  std::istream in_;
-  std::ostream out_;
+  mutable std::istream in_;
+  mutable std::ostream out_;
   
  public:
-  Terminal(Terminal&) = delete;
-  Terminal(Terminal&&) = delete;
-  Terminal(RootDirectory&& root = RootDirectory(), 
+  Terminal(RootDirectory&& root = RootDirectory{}, 
     const std::ostream& out = std::cout, 
     const std::istream& in = std::cin);
   Terminal(const std::ostream& out, const std::istream& in = std::cin);
   Terminal(const std::istream& in);
   
- private:
-  void help() noexcept;
-  
-  bool parseCommand(std::vector<std::string>& command);
- public:
-  void run();
-  
+  Terminal(Terminal&) = delete;
   Terminal& operator=(const Terminal&) = delete;
+  Terminal(Terminal&&) = delete;
   Terminal& operator=(Terminal&&) = delete;
+  
+ private:
+  bool ParseCommand(std::vector<std::string>& command) const;
+  Entry* Get(const std::string& path);
+  const Entry* Get(const std::string& path) const;
+  
+  void Help() const noexcept;
+  void Ls(std::vector<std::string>::const_iterator begin, 
+    std::vector<std::string>::const_iterator end) const;
+  
+ public:
+  void Run();
 };
 
 } // namespace term_emul

@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "dir/RootDirectory.h"
+#include "Entry.h"
 #include "functions.h"
 
 namespace term_emul
@@ -16,28 +17,79 @@ namespace term_emul
 
 Terminal::Terminal(RootDirectory&& root, const std::ostream& out, 
   const std::istream& in)
-: root_(std::move(root)), current_(root_), out_(out.rdbuf()), in_(in.rdbuf())
+: root_(std::move(root)), current_(&root_), in_(in.rdbuf()), out_(out.rdbuf())
 {}
 Terminal::Terminal(const std::ostream& out, const std::istream& in)
-: Terminal(RootDirectory(), out, in)
+: Terminal(RootDirectory{}, out, in)
 {}
 Terminal::Terminal(const std::istream& in)
 : Terminal(std::cout, in)
 {}
 
-bool Terminal::parseCommand(std::vector<std::string>& command)
+void Terminal::Run()
+{
+  for (std::vector<std::string> cl; 
+    out_ << current_ -> DisplayName() << " # ", ParseCommand(cl);
+    cl.resize(0))
+  {
+    if (cl.size())
+    {
+      if (cl[0] == "exit")
+      {
+        break;
+      }
+      if (cl[0] == "help")
+      {
+        Help();
+      }
+      else if (cl[0] == "ls")
+      {
+        Ls(++cl.cbegin(), cl.cend());
+      }
+      else
+      {
+        out_ << cl[0] << ": unknown command. Use help to show possible commands" 
+          << std::endl;
+      }
+    }
+  }
+}
+
+void Terminal::Help() const noexcept
+{
+  out_ << "Terminal poor alpha\n"
+    "\nhelp                               Print avaible command info"
+    "\nexit                               Terminate command proccessor"
+    "\nls -a -c|-d|-n [path1] [path2]...  Show directory children names or filename"
+    "\n                                   -a, --all  Show hidden entries"
+    "\n                                   -c, --asc  Change sort of names by asceding (default)"
+    "\n                                   -d, --desc Change sort of names by desceding"
+    "\n                                   -n, --none Do not sort"
+    "\ncd [dir]                           Change working directory. Default is '/'"
+    "\ncat <file1> [file2]...             Output file content"
+    "\ntouch -s <file1> [file2]...        Create file, if it is not exist"
+    "\n                                   -s, --single  Create singleline file"
+    "\nmkdir <dir1> [dir2]...             Create directory, if it is not exist"
+    "\nrm <path1> [path2]...              Remove (hide) file or directory"
+    "\nrestore <path1> [path2]...         Recover (unhide) file or directory"
+    "\nmv <path> <path2>                  Move file or directory to other location <path2>"
+    "\nedit <file> <str>                  Change file content to <str>"
+    << std::endl;
+}
+
+bool Terminal::ParseCommand(std::vector<std::string>& command) const
 {
   std::string el_buf;
   enum class State{kNone = 0, kQuot, kDquot, kEsc} st = State::kNone;
   bool completed = false;
-  for(std::string line; !completed && std::getline(in_, line);)
+  for (std::string line; !completed && std::getline(in_, line);)
   {
     std::for_each(line.cbegin(), line.cend(), [&st, &el_buf, &command](char sym)
     {
-      switch(sym)
+      switch (sym)
       {
         case '\'':
-          switch(st)
+          switch (st)
           {
             case State::kQuot:
               st = State::kNone;
@@ -54,7 +106,7 @@ bool Terminal::parseCommand(std::vector<std::string>& command)
           }
           break;
         case '"':
-          switch(st)
+          switch (st)
           {
             case State::kDquot:
               st = State::kNone;
@@ -75,10 +127,10 @@ bool Terminal::parseCommand(std::vector<std::string>& command)
         case '\t':
         case '\v':
         case '\f':
-          switch(st)
+          switch (st)
           {
             case State::kNone:
-              if(el_buf.size() > 0)
+              if(el_buf.size())
               {
                 command.push_back(el_buf);
                 el_buf.resize(0);
@@ -95,7 +147,7 @@ bool Terminal::parseCommand(std::vector<std::string>& command)
           break;
         
         case '\\':
-          switch(st)
+          switch (st)
           {
             case State::kNone:
               st = State::kEsc;
@@ -111,7 +163,7 @@ bool Terminal::parseCommand(std::vector<std::string>& command)
           break;
         
         default:
-          switch(st)
+          switch (st)
           {
             case State::kNone:
             case State::kQuot:
@@ -125,7 +177,7 @@ bool Terminal::parseCommand(std::vector<std::string>& command)
       }
     });
     
-    switch(st)
+    switch (st)
     {
       case State::kNone:
         completed = true;
@@ -138,63 +190,89 @@ bool Terminal::parseCommand(std::vector<std::string>& command)
         st = State::kNone;
         el_buf += '\n';
     }
-    if(!completed)
+    if (!completed)
     {
       out_ << "> ";
     }
   }
-  if(el_buf.size() > 0)
+  if (el_buf.size())
   {
     command.push_back(el_buf);
   }
   return static_cast<bool>(in_);
 }
 
-void Terminal::run()
+void Terminal::Ls(std::vector<std::string>::const_iterator begin, 
+  std::vector<std::string>::const_iterator end) const
 {
-  for(std::vector<std::string> comm; 
-    out_ << current_.displayName() << " # ", this -> parseCommand(comm);
-    comm.resize(0))
+  switch(end - begin)
   {
-    if(comm.size() > 0)
-    {
-      if(comm[0] == "exit")
+    case 0:
+      out_ << (*current_) << std::endl;
+      break;
+    case 1:
       {
-        break;
+        const Entry* elem = Get(*begin);
+        if(elem == nullptr)
+        {
+          out_ << "ls: " << (*begin) << ": is not a file or directory" << std::endl;
+        }
+        else
+        {
+          out_ << (*elem) << std::endl;
+        }
       }
-      if(comm[0] == "help")
+      break;
+    default:
+      std::for_each(begin, end, [this](const std::string& path)
       {
-        this -> help();
-      }
-      else
-      {
-        out_ << comm[0] << ": unknown command. Use help to show possible commands" 
-          << std::endl;
-      }
-    }
+        const Entry* elem = Get(path);
+        if(elem == nullptr)
+        {
+          out_ << "ls: " << path << ": is not a file or directory\n";
+        }
+        else
+        {
+          out_ << elem -> DisplayFullName() << ":\n" << (*elem) << "\n\n";
+        }
+      });
   }
 }
 
-void Terminal::help() noexcept
+Entry* Terminal::Get(const std::string& path)
+{ 
+  Entry* res = nullptr;
+  std::vector<std::string> dpath = func::DelimPath(path);
+  auto&& it = dpath.begin();
+  if (dpath.size() && dpath[0] == "/")
+  {
+    res = static_cast<Entry*>(&root_);
+    ++it;
+  }
+  else
+  {
+    res = static_cast<Entry*>(current_);
+  }
+  
+  for (; res != nullptr && it != dpath.cend(); ++it)
+  {
+    if (*it == "..")
+    {
+      if(res -> back() != nullptr)
+      {
+        res = res -> back();
+      }
+    }
+    else if (*it != ".")
+    {
+      res = (res -> next(*it)).get();
+    }
+  }
+  return res;
+}
+const Entry* Terminal::Get(const std::string& path) const
 {
-  out_ << "Terminal poor alpha\n"
-    "\nhelp                                Print avaible command info"
-    "\nexit                                Terminate command proccessor"
-    "\nls [-a] [-c|-d] [path1] [path2]...  Show directory children names or filename"
-    "\n                                    -a, --all  Show hidden entries"
-    "\n                                    -c, --asc  Change sort of names by asceding (default)"
-    "\n                                    -d, --desc Change sort of names by desceding"
-    "\n                                    -n, --none Do not sort"
-    "\ncd [dir]                            Change working directory. Default is '/'"
-    "\ncat <file1> [file2]...              Output file content"
-    "\ntouch [-s] <file1> [file2]...       Create file, if it is not exist"
-    "\n                                    -s, --single  Create singleline file"
-    "\nmkdir <dir1> [dir2]...              Create directory, if it is not exist"
-    "\nrm <path1> [path2]...               Remove (hide) file or directory"
-    "\nrestore <path1> [path2]...          Recover (unhide) file or directory"
-    "\nmv <path> <path2>                   Move file or directory to other location <path2>"
-    "\nedit <file> <str>                   Change file content to <str>\n"
-    << std::endl;
+  return const_cast<Terminal*>(this) -> Get(path);
 }
 
 } // namespace term_emul

@@ -154,7 +154,7 @@ DirVal Entry::next(const std::string& child_name)
 }
 DirConstVal Entry::next(const std::string& child_name) const
 {
-  return std::const_pointer_cast<const DirVal::element_type>(const_cast<Entry*>(
+  return std::const_pointer_cast<DirConstVal::element_type>(const_cast<Entry*>(
     this) -> next(child_name));
 }
 

@@ -13,12 +13,12 @@ RootDirectory::RootDirectory()
 {
   name_ = "/";
 }
-RootDirectory::RootDirectory(const Container& content)
+RootDirectory::RootDirectory(const RootDirectory::Container& content)
 : Directory{"a", content}
 {
   name_ = "/";
 }
-RootDirectory::RootDirectory(Container&& content)
+RootDirectory::RootDirectory(RootDirectory::Container&& content)
 : Directory("a", std::move(content))
 {
   name_ = "/";
