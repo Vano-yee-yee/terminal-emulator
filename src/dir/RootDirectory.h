@@ -16,6 +16,7 @@ class RootDirectory: public Directory
   
   RootDirectory();
   RootDirectory(const Container& content);
+  RootDirectory(Container&& content);
   
   void rename(const std::string&) = delete;
   std::string DisplayName() const override;

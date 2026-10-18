@@ -22,6 +22,10 @@ Directory::Directory(const std::string& name, const Directory::Container& conten
     content_.push_back(DirVal{e -> Clone(CurDirT{this})});
   }
 }
+Directory::Directory(const std::string& name, Directory::Container&& content, 
+  CurDirT current_dir)
+: Entry{name, current_dir}, content_(func::MoveContainer(content, CurDirT{this}))
+{}
 Directory::Directory(const Directory& other, CurDirT current_dir)
 : Entry{static_cast<const Entry&>(other), current_dir}
 {

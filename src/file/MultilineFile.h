@@ -18,9 +18,6 @@ class MultilineFile: public Entry
   MultilineFile(const std::string& name, const std::string& content, 
     CurDirT current_dir = nullptr);
   
-/*  const std::string& content() const & override;
-  std::string&& content() && override;
-*/
   void edit(const std::string& new_content) override;
 };
 

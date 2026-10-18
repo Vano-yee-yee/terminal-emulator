@@ -18,6 +18,11 @@ RootDirectory::RootDirectory(const Container& content)
 {
   name_ = "/";
 }
+RootDirectory::RootDirectory(Container&& content)
+: Directory("", content)
+{
+  name_ = "/";
+}
 
 std::string RootDirectory::DisplayName() const
 {

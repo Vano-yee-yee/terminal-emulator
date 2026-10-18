@@ -1,7 +1,6 @@
 #include "file/MultilineFile.h"
 
 #include <string>
-//#include <utility> // move
 
 #include "aliases.h"
 #include "Entry.h"
@@ -15,15 +14,6 @@ MultilineFile::MultilineFile(const std::string& name, const std::string& content
 {
   text_ = content;
 }
-
-/*const std::string& MultilineFile::content() const &
-{
-  return content_;
-}
-std::string&& MultilineFile::content() &&
-{
-  return std::move(content_);
-}*/
 
 void MultilineFile::edit(const std::string& new_content)
 {

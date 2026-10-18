@@ -25,6 +25,8 @@ class Directory: public Entry
   using Entry::Entry;
   Directory(const std::string& name, const Container& content, 
     CurDirT current_dir = nullptr);
+  Directory(const std::string& name, Container&& content, 
+    CurDirT current_dir = nullptr);
   
   Directory(const Directory& other, CurDirT current_dir = nullptr);
   Directory& operator=(const Directory& other);
