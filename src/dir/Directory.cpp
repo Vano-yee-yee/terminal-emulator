@@ -1,48 +1,121 @@
 #include "dir/Directory.h"
 
-#include <algorithm> // find_if for_each none_of
+#include <algorithm> // find_if for_each none_of sort
 #include <functional> // less greater
 #include <string>
+#include <utility> // move swap
 #include <vector>
 
-#include "dir/RootDirectory.h"
+#include "aliases.h"
 #include "Entry.h"
+#include "functions.h"
 
 namespace term_emul
 {
 
-Directory::Directory(const std::string& name, const Directory::Container& content,
-  Directory& current_dir)
-: Entry(name, current_dir), content_(content)
+Directory::Directory(const std::string& name, const Directory::Container& content, 
+  CurDirT current_dir)
+: Entry{name, current_dir}
+{
+  for (const DirVal& e: content)
+  {
+    content_.push_back(DirVal{e -> Clone(CurDirT{this})});
+  }
+}
+Directory::Directory(const Directory& other, CurDirT current_dir)
+: Entry{static_cast<const Entry&>(other), current_dir}
+{
+  for (const DirVal& e: other.content_)
+  {
+    content_.push_back(DirVal{e -> Clone(CurDirT{this})});
+  }
+}
+Directory::Directory(Directory&& other, CurDirT current_dir) /*noexcept*/
+: Entry{static_cast<Entry&&>(other), current_dir}, 
+  content_(func::MoveContainer(other.content_, CurDirT{this}))
 {}
 
-Entry& Directory::next(const std::string& child_name)
+Directory& Directory::operator=(const Directory& other)
 {
-  const iterator it = std::find_if(this -> begin(), this -> end(), 
-    [&child_name](Entry* e)
-    {
-      return e -> name() == child_name;
-    });
-  if(it == this -> end())
+  if (&other == this)
   {
     return *this;
   }
-  return **it;
+  
+  name_ = other.name_;
+  cur_dir_ = other.cur_dir_;
+  content_.resize(0);
+  for (const DirVal& e: other.content_)
+  {
+    content_.push_back(DirVal{e -> Clone(CurDirT{this})});
+  }
+  return *this;
 }
-
-void Directory::remove(const Entry& elem)
+Directory& Directory::operator=(Directory&& other) /*noexcept*/
 {
-  this -> remove(elem.name());
-}
-Directory& Directory::operator-(const Entry& elem)
-{
-  this -> remove(elem);
+  if (&other == this)
+  {
+    return *this;
+  }
+  
+  std::swap(name_, other.name_);
+  std::swap(cur_dir_, other.cur_dir_);
+  content_ = func::MoveContainer(other.content_, CurDirT{this});
   return *this;
 }
 
-std::string Directory::displayName() const
+DirVal Directory::next(const std::string& child_name)
 {
-  return Entry::displayName() + '/';
+  const iterator it = std::find_if(begin(), end(), [&child_name](DirVal& e)
+  {
+    return e -> name() == child_name;
+  });
+  if (it == end())
+  {
+    return nullptr;
+  }
+  return *it;
+}
+
+void Directory::add(const Entry& elem)
+{
+  Entry* const new_el = elem.Clone(CurDirT(this));
+  if (new_el != nullptr && next(elem.name()) == nullptr)
+  {
+    content_.push_back(DirVal{new_el});
+  }
+}
+Directory& Directory::operator+=(const Entry& elem)
+{
+  add(elem);
+  return *this;
+}
+
+void Directory::remove(const std::string& name)
+{
+  DirVal ef = next(name);
+  if (ef != nullptr)
+  {
+    ef -> Hide();
+  }
+}
+void Directory::remove(Entry& elem)
+{
+  DirVal ef = next(elem.name());
+  if (ef != nullptr && *ef == elem)
+  {
+    ef -> Hide();
+  }
+}
+Directory& Directory::operator-=(Entry& elem)
+{
+  remove(elem);
+  return *this;
+}
+
+std::string Directory::DisplayName() const
+{
+  return Entry::DisplayName() + '/';
 }
 
 Directory::iterator Directory::begin() noexcept
@@ -62,17 +135,18 @@ Directory::const_iterator Directory::cend() const noexcept
   return content_.cend();
 }
 
-std::string Directory::display(bool hidden, DisplaySort sort_type) const
+std::string Directory::Display(bool hidden, DisplaySort sort_type) const
 {
   std::vector<std::string> names;
-  std::for_each(this -> cbegin(), this -> cend(), [&names, &hidden](const Entry* e)
+  std::for_each(cbegin(), cend(), [&names, &hidden](const DirVal& e)
   {
-    if(!e -> isHidden() || e -> isHidden() && hidden)
+    if (!e -> IsHidden() || e -> IsHidden() && hidden)
     {
-      names.push_back(e -> displayName());
+      names.push_back(e -> DisplayName());
     }
   });
-  switch(sort_type)
+  
+  switch (sort_type)
   {
     case DisplaySort::kAsceding:
       std::sort(names.begin(), names.end(), std::less<std::string>{});
@@ -92,22 +166,17 @@ std::string Directory::display(bool hidden, DisplaySort sort_type) const
   return res;
 }
 
-bool Directory::isUniqueName(const std::string& name) const
+bool Directory::IsUniqueName(const std::string& name) const
 {
-  return std::none_of(this -> cbegin(), this -> cend(), 
-    [&name](const Entry* e)
-    {
-      return e -> name() == name;
-    });
+  return std::none_of(cbegin(), cend(), [&name](const DirVal& e)
+  {
+    return e -> name() == name;
+  });
 }
 
-void Directory::remove(const std::string& name)
+Directory* Directory::Clone(CurDirT current_dir) const
 {
-  Entry& ef = this -> next(name);
-  if(ef != *this)
-  {
-    ef.hide();
-  }
+  return new Directory{*this, current_dir};
 }
 
 } // namespace term_emul

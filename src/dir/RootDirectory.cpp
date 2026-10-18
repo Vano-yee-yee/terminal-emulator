@@ -2,25 +2,31 @@
 
 #include <string>
 
+#include "aliases.h"
 #include "dir/Directory.h"
 
 namespace term_emul
 {
 
 RootDirectory::RootDirectory()
-: Directory("", *this)
+: Directory{""}
 {
   name_ = "/";
 }
 RootDirectory::RootDirectory(const Container& content)
-: Directory("", content, *this)
+: Directory{"", content}
 {
   name_ = "/";
 }
 
-std::string RootDirectory::displayName() const
+std::string RootDirectory::DisplayName() const
 {
-  return this -> name();
+  return name();
+}
+
+RootDirectory* RootDirectory::Clone(CurDirT current_dir) const
+{
+  return nullptr;
 }
 
 } // namespace term_emul

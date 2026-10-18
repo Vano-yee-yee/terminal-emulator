@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "aliases.h"
 #include "dir/Directory.h"
 
 namespace term_emul
@@ -11,14 +12,16 @@ namespace term_emul
 class RootDirectory: public Directory
 {
  public:
+  RootDirectory* Clone(CurDirT current_dir) const override;
+  
   RootDirectory();
   RootDirectory(const Container& content);
   
   void rename(const std::string&) = delete;
-  std::string displayName() const override;
+  std::string DisplayName() const override;
   
-  void hide() = delete;
-  void unhide() = delete;
+  void Hide() = delete;
+  void Unhide() = delete;
 };
 
 } // namespace term_emul

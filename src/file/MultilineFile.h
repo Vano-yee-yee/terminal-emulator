@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "dir/Directory.h"
+#include "aliases.h"
 #include "Entry.h"
 
 namespace term_emul
@@ -11,16 +11,17 @@ namespace term_emul
 
 class MultilineFile: public Entry
 {
- protected:
-  std::string content_;
-  
  public:
+  MultilineFile* Clone(CurDirT current_dir) const override;
+  
   using Entry::Entry;
   MultilineFile(const std::string& name, const std::string& content, 
-    Directory& current_dir);
+    CurDirT current_dir = nullptr);
   
+/*  const std::string& content() const & override;
+  std::string&& content() && override;
+*/
   void edit(const std::string& new_content) override;
-  std::string displayContent() const override;
 };
 
 } // namespace term_emul

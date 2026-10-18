@@ -1,72 +1,56 @@
 #if !defined(TERMINAL_EMULATOR_DIR_DIRECTORY_H_)
 #define TERMINAL_EMULATOR_DIR_DIRECTORY_H_
 
-#include <concepts> // same_as derived_from
 #include <string>
-#include <vector>
 
+#include "aliases.h"
 #include "Entry.h"
 
 namespace term_emul
 {
 
-class RootDirectory;
-
 class Directory: public Entry
 {
  public:
-  using Container = std::vector<Entry*>;
+  using Container = DirContainer;
   using iterator = Container::iterator;
   using const_iterator = Container::const_iterator;
   
- private:
+ protected:
   Container content_;
   
  public:
+  Directory* Clone(CurDirT current_dir) const override;
+  
   using Entry::Entry;
   Directory(const std::string& name, const Container& content, 
-    Directory& current_dir);
+    CurDirT current_dir = nullptr);
   
-  std::string displayName() const override;
-  bool isUniqueName(const std::string& name) const;
+  Directory(const Directory& other, CurDirT current_dir = nullptr);
+  Directory& operator=(const Directory& other);
+  Directory(Directory&& other, CurDirT current_dir = nullptr) /*noexcept*/;
+  Directory& operator=(Directory&& other) /*noexcept*/;
+  ~Directory() = default;
   
   iterator begin() noexcept;
   iterator end() noexcept;
   const_iterator cbegin() const noexcept;
   const_iterator cend() const noexcept;
   
-  Entry& next(const std::string& child_name) override;
+  std::string DisplayName() const override;
   
-  template <typename T = Entry>
-  requires (!std::same_as<T, RootDirectory> && std::derived_from<T, Entry>)
-  void add(const T& elem);
+  bool IsUniqueName(const std::string& name) const;
   
-  void remove(const std::string& name);
-  void remove(const Entry& elem);
-  std::string display(bool hidden = false, 
+  DirVal next(const std::string& child_name) override;
+  std::string Display(bool hidden = false, 
     DisplaySort sort_type = DisplaySort::kAsceding) const override;
+  void add(const Entry& elem);
+  void remove(Entry& elem);
+  void remove(const std::string& name);
   
-  Directory& operator-(const Entry& elem);
-  
-  template <typename T = Entry>
-  Directory& operator+(const T& elem);
+  Directory& operator+=(const Entry& elem);
+  Directory& operator-=(Entry& elem);
 };
-
-template <typename T>
-requires (!std::same_as<T, RootDirectory> && std::derived_from<T, Entry>)
-void Directory::add(const T& elem)
-{
-  if(this -> next(elem.name()) == *this)
-  {
-    content_.push_back(new T(elem));
-  }
-}
-template <typename T>
-Directory& Directory::operator+(const T& elem)
-{
-  this -> add(elem);
-  return *this;
-}
 
 } // namespace term_emul
 

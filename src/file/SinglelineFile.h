@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "dir/Directory.h"
+#include "aliases.h"
 #include "file/MultilineFile.h"
 
 namespace term_emul
@@ -12,10 +12,13 @@ namespace term_emul
 class SinglelineFile: public MultilineFile
 {
  public:
-   SinglelineFile(const std::string& name, const std::string& content,
-     Directory& current_dir);
-   
-   void edit(const std::string& new_content) override;
+  SinglelineFile* Clone(CurDirT current_dir) const override;
+  
+  using MultilineFile::MultilineFile;
+  SinglelineFile(const std::string& name, const std::string& content,
+    CurDirT current_dir = nullptr);
+  
+  void edit(const std::string& new_content) override;
 };
 
 } // namespace term_emul
