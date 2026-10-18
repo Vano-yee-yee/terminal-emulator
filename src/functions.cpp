@@ -80,7 +80,7 @@ std::string EscapeQuotes(const std::string& str)
   return res;
 }
 
-DirContainer&& MoveContainer(DirContainer& content, CurDirT current_dir) /*noexcept*/
+DirContainer&& MoveContainer(DirContainer& content, CurDirT current_dir) noexcept
 {
   for (DirContainer::iterator it = content.begin(); it != content.end(); ++it)
   {

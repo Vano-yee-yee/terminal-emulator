@@ -30,8 +30,8 @@ class Directory: public Entry
   
   Directory(const Directory& other, CurDirT current_dir = nullptr);
   Directory& operator=(const Directory& other);
-  Directory(Directory&& other, CurDirT current_dir = nullptr) /*noexcept*/;
-  Directory& operator=(Directory&& other) /*noexcept*/;
+  Directory(Directory&& other, CurDirT current_dir = nullptr) noexcept;
+  Directory& operator=(Directory&& other) noexcept;
   ~Directory() = default;
   
   iterator begin() noexcept;

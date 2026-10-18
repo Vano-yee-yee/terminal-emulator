@@ -18,7 +18,7 @@ class Entry
   CurDirT cur_dir_;
   
   friend DirContainer&& func::MoveContainer(DirContainer& content, 
-    CurDirT current_dir) /*noexcept*/;
+    CurDirT current_dir) noexcept;
  public:
   virtual Entry* Clone(CurDirT current_dir) const;
   

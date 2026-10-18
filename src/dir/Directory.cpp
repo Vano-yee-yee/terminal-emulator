@@ -34,8 +34,8 @@ Directory::Directory(const Directory& other, CurDirT current_dir)
     content_.push_back(DirVal{e -> Clone(CurDirT{this})});
   }
 }
-Directory::Directory(Directory&& other, CurDirT current_dir) /*noexcept*/
-: Entry{static_cast<Entry&&>(other), current_dir}, 
+Directory::Directory(Directory&& other, CurDirT current_dir) noexcept
+: Entry{static_cast<Entry&&>(std::move(other)), current_dir}, 
   content_(func::MoveContainer(other.content_, CurDirT{this}))
 {}
 
@@ -55,7 +55,7 @@ Directory& Directory::operator=(const Directory& other)
   }
   return *this;
 }
-Directory& Directory::operator=(Directory&& other) /*noexcept*/
+Directory& Directory::operator=(Directory&& other) noexcept
 {
   if (&other == this)
   {
@@ -83,10 +83,18 @@ DirVal Directory::next(const std::string& child_name)
 
 void Directory::add(const Entry& elem)
 {
-  Entry* const new_el = elem.Clone(CurDirT(this));
-  if (new_el != nullptr && next(elem.name()) == nullptr)
+  Entry* new_el = elem.Clone(CurDirT(this));
+  if (new_el == nullptr) // except RootDirectory
+  {
+    return;
+  }
+  if (next(elem.name()) == nullptr)
   {
     content_.push_back(DirVal{new_el});
+  }
+  else
+  {
+    delete new_el;
   }
 }
 Directory& Directory::operator+=(const Entry& elem)
@@ -106,7 +114,7 @@ void Directory::remove(const std::string& name)
 void Directory::remove(Entry& elem)
 {
   DirVal ef = next(elem.name());
-  if (ef != nullptr && *ef == elem)
+  if (ef != nullptr && ef.get() == &elem)
   {
     ef -> Hide();
   }

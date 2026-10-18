@@ -2,7 +2,7 @@
 
 #include <memory> // const_pointer_cast
 #include <ostream>
-#include <stdexcept> // out_of_range
+#include <stdexcept> // out_of_range invalid_argument
 #include <string>
 #include <utility> // move swap
 
@@ -19,6 +19,11 @@ Entry::Entry(const std::string& name, CurDirT current_dir)
   if (func::IsValidName(name))
   {
     name_ = name;
+  }
+  else
+  {
+    throw std::invalid_argument(std::string("'") + name 
+      + " is not a valid Entry name");
   }
 }
 Entry::Entry(const Entry& other, CurDirT current_dir)
@@ -54,6 +59,7 @@ std::string&& Entry::name() && noexcept
 {
   return std::move(name_);
 }
+
 void Entry::rename(const std::string& new_name)
 {
   if (func::IsValidName(new_name) && (cur_dir_ == nullptr || cur_dir_ != nullptr 
@@ -68,12 +74,14 @@ bool Entry::IsHidden() const noexcept
 {
   return name_.size() && name_[0] == '.';
 }
+
 void Entry::Hide()
 {
   if(name_ == "")
   {
     return;
   }
+  
   const std::string hname = std::string(".") + name_;
   if (!IsHidden() && (cur_dir_ == nullptr || cur_dir_ != nullptr 
     && cur_dir_ -> IsUniqueName(hname))
@@ -88,6 +96,7 @@ void Entry::Unhide()
   {
     return;
   }
+  
   const std::string unh_name = name_.substr(1);
   if (IsHidden() && (cur_dir_ == nullptr || cur_dir_ != nullptr
     && cur_dir_ -> IsUniqueName(unh_name))
@@ -125,8 +134,8 @@ CurDirT Entry::back() noexcept
 }
 ConstCurDirT Entry::back() const noexcept
 {
-  return const_cast<ConstCurDirT>(const_cast<Entry*>(this) 
-    -> back());
+  return const_cast<Entry*>(this) 
+    -> back();
 }
 
 std::ostream& operator<<(std::ostream& out, const Entry& ent)
@@ -145,8 +154,8 @@ DirVal Entry::next(const std::string& child_name)
 }
 DirConstVal Entry::next(const std::string& child_name) const
 {
-  return std::const_pointer_cast<const Entry>(const_cast<Entry*>(this) 
-    -> next(child_name));
+  return std::const_pointer_cast<const DirVal::element_type>(const_cast<Entry*>(
+    this) -> next(child_name));
 }
 
 std::string Entry::FullName() const
@@ -208,7 +217,7 @@ Entry& Entry::operator[](const std::string& name)
 }
 const Entry& Entry::operator[](const std::string& name) const
 {
-  return *(const_cast<Entry*>(this) -> next(name));
+  return (*const_cast<Entry*>(this))[name];
 }
 
 } // namespace term_emul

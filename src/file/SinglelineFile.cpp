@@ -21,7 +21,7 @@ SinglelineFile::SinglelineFile(const std::string& name, const std::string& conte
   CurDirT current_dir)
 : MultilineFile{name, current_dir}
 {
-  this -> edit(content);
+  edit(content);
 }
 
 SinglelineFile* SinglelineFile::Clone(CurDirT current_dir) const

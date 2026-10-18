@@ -17,7 +17,7 @@ bool IsSingleline(const std::string& str);
 std::vector<std::string> DelimPath(const std::string& path);
 std::string EscapeQuotes(const std::string& str);
 
-DirContainer&& MoveContainer(DirContainer& content, CurDirT current_dir) /*noexcept*/;
+DirContainer&& MoveContainer(DirContainer& content, CurDirT current_dir) noexcept;
 
 } // namespace func
 } // namespace term_emul

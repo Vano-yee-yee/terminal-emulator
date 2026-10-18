@@ -9,17 +9,17 @@ namespace term_emul
 {
 
 RootDirectory::RootDirectory()
-: Directory{""}
+: Directory{"a"}
 {
   name_ = "/";
 }
 RootDirectory::RootDirectory(const Container& content)
-: Directory{"", content}
+: Directory{"a", content}
 {
   name_ = "/";
 }
 RootDirectory::RootDirectory(Container&& content)
-: Directory("", content)
+: Directory("a", std::move(content))
 {
   name_ = "/";
 }
