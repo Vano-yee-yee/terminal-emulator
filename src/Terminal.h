@@ -45,9 +45,18 @@ class Terminal
   const Entry* Get(const std::string& path) const;
   
   void Help() const noexcept;
+  
   void Ls(CLConstIt begin, CLConstIt end) const;
+  void Rm(CLConstIt begin, CLConstIt end);
+  void Restore(CLConstIt begin, CLConstIt end);
+  void Mv(CLConstIt begin, CLConstIt end);
+  
   void Cd(CLConstIt begin, CLConstIt end);
+  void Mkdir(CLConstIt begin, CLConstIt end);
+  
   void Cat(CLConstIt begin, CLConstIt end) const;
+  void Touch(CLConstIt begin, CLConstIt end);
+  void Edit(CLConstIt begin, CLConstIt end);
   
  public:
    void Run();

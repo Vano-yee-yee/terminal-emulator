@@ -108,12 +108,7 @@ void Entry::Unhide()
 
 std::string Entry::DisplayName() const
 {
-  std::string res = std::string("'") + func::EscapeQuotes(name_);
-  if (*--res.end() != '\'')
-  {
-    res += '\'';
-  }
-  return res;
+  return func::InQuotes(name_);
 }
 
 const std::string& Entry::content() const & noexcept
@@ -123,8 +118,8 @@ const std::string& Entry::content() const & noexcept
 std::string&& Entry::content() && noexcept
 {
   return std::move(text_);
-}
 
+}
 void Entry::edit(const std::string& new_content)
 {}
 
@@ -186,12 +181,7 @@ bool Entry::operator!=(const Entry& ent) const
 
 std::string Entry::DisplayFullName() const
 {
-  std::string res = std::string("'") + func::EscapeQuotes(FullName());
-  if (*--res.end() != '\'')
-  {
-    res += '\'';
-  }
-  return res;
+  return func::InQuotes(FullName());
 }
 
 Entry* Entry::Clone(CurDirT current_dir) const
@@ -204,14 +194,8 @@ Entry& Entry::operator[](const std::string& name)
   DirVal res = next(name);
   if (res == nullptr)
   {
-    std::string msg{"Element '"};
-    msg += func::EscapeQuotes(name);
-    if (*--msg.end() != '\'')
-    {
-      msg += '\'';
-    }
-    msg += " not found";
-    throw std::out_of_range{msg};
+    throw std::out_of_range{std::string{"Element "} + func::InQuotes(name) 
+      + " not found"};
   }
   return *res;
 }

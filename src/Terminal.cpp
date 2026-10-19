@@ -45,19 +45,27 @@ void Terminal::Run()
       }
       else if (cl[0] == "ls")
       {
-        Ls(++cl.begin(), cl.cend());
+        Ls(++cl.cbegin(), cl.cend());
       }
       else if (cl[0] == "cd")
       {
-        Cd(++cl.begin(), cl.end());
+        Cd(++cl.cbegin(), cl.cend());
       }
       else if (cl[0] == "cat")
       {
-        Cat(++cl.begin(), cl.end());
+        Cat(++cl.cbegin(), cl.cend());
+      }
+      else if (cl[0] == "edit")
+      {
+        Edit(++cl.cbegin(), cl.cend());
+      }
+      else if(cl[0] == "touch")
+      {
+        Touch(++cl.cbegin(), cl.cend());
       }
       else
       {
-        out_ << cl[0] << ": unknown command. Use help to show possible commands" 
+        out_ << func::InQuotes(cl[0]) << ": unknown command. Use help to show possible commands" 
           << std::endl;
       }
     }
@@ -89,12 +97,20 @@ void Terminal::Help() const noexcept
 bool Terminal::ParseCommand(CommandLine& command) const
 {
   std::string el_buf;
-  enum class State{kNone = 0, kQuot, kDquot, kEsc} st = State::kNone;
+  enum class State{kNone = 0, kQuot, kDquot, kEsc, kQuotEmpty, kDquotEmpty} 
+    st = State::kNone;
   bool completed = false;
   for (std::string line; !completed && std::getline(in_, line);)
   {
     std::for_each(line.cbegin(), line.cend(), [&st, &el_buf, &command](char sym)
     {
+      if (st == State::kEsc)
+      {
+        st = State::kNone;
+        el_buf += sym;
+        return;
+      }
+      
       switch (sym)
       {
         case '\'':
@@ -104,14 +120,19 @@ bool Terminal::ParseCommand(CommandLine& command) const
               st = State::kNone;
               break;
             case State::kNone:
-              st = State::kQuot;
+              st = State::kQuotEmpty;
               break;
             case State::kDquot:
               el_buf += sym;
               break;
-            case State::kEsc:
+            case State::kQuotEmpty:
               st = State::kNone;
+              command.push_back(el_buf);
+              break;
+            case State::kDquotEmpty:
+              st = State::kDquot;
               el_buf += sym;
+              break;
           }
           break;
         case '"':
@@ -121,14 +142,19 @@ bool Terminal::ParseCommand(CommandLine& command) const
               st = State::kNone;
               break;
             case State::kNone:
-              st = State::kDquot;
+              st = State::kDquotEmpty;
               break;
             case State::kQuot:
               el_buf += sym;
               break;
-            case State::kEsc:
+            case State::kDquotEmpty:
               st = State::kNone;
+              command.push_back(el_buf);
+              break;
+            case State::kQuotEmpty:
+              st = State::kQuot;
               el_buf += sym;
+              break;
           }
           break;
         
@@ -149,9 +175,14 @@ bool Terminal::ParseCommand(CommandLine& command) const
             case State::kDquot:
               el_buf += sym;
               break;
-            case State::kEsc:
-              st = State::kNone;
+            case State::kQuotEmpty:
+              st = State::kQuot;
               el_buf += sym;
+              break;
+            case State::kDquotEmpty:
+              st = State::kDquot;
+              el_buf += sym;
+              break;
           }
           break;
         
@@ -165,9 +196,14 @@ bool Terminal::ParseCommand(CommandLine& command) const
             case State::kDquot:
               el_buf += sym;
               break;
-            case State::kEsc:
-              st = State::kNone;
+            case State::kQuotEmpty:
+              st = State::kQuot;
               el_buf += sym;
+              break;
+            case State::kDquotEmpty:
+              st = State::kDquot;
+              el_buf += sym;
+              break;
           }
           break;
         
@@ -179,9 +215,14 @@ bool Terminal::ParseCommand(CommandLine& command) const
             case State::kDquot:
               el_buf += sym;
               break;
-            case State::kEsc:
-              st = State::kNone;
+            case State::kQuotEmpty:
+              st = State::kQuot;
               el_buf += sym;
+              break;
+            case State::kDquotEmpty:
+              st = State::kDquot;
+              el_buf += sym;
+              break;
           }
       }
     });
@@ -198,6 +239,14 @@ bool Terminal::ParseCommand(CommandLine& command) const
       case State::kEsc:
         st = State::kNone;
         el_buf += '\n';
+      case State::kQuotEmpty:
+        st = State::kQuot;
+        el_buf += '\n';
+        break;
+      case State::kDquotEmpty:
+        st = State::kDquot;
+        el_buf += '\n';
+        break;
     }
     if (!completed)
     {
@@ -236,7 +285,7 @@ void Terminal::Ls(CLConstIt begin, CLConstIt end) const
     }
     else
     {
-      out_ << "ls: unknown parameter " << el << std::endl;
+      out_ << "ls: unknown parameter " << func::InQuotes(el) << std::endl;
       return;
     }
   }
@@ -251,7 +300,8 @@ void Terminal::Ls(CLConstIt begin, CLConstIt end) const
         const Entry* elem = Get(*begin);
         if (elem == nullptr)
         {
-          out_ << "ls: " << *begin << ": is not a file or directory" << std::endl;
+          out_ << "ls: " << func::InQuotes(*begin) << 
+            ": is not a file or directory" << std::endl;
         }
         else
         {
@@ -265,7 +315,8 @@ void Terminal::Ls(CLConstIt begin, CLConstIt end) const
         const Entry* elem = Get(path);
         if (elem == nullptr)
         {
-          out_ << "ls: " << path << ": is not a file or directory\n";
+          out_ << "ls: " << func::InQuotes(path) 
+            << ": is not a file or directory\n";
         }
         else
         {
@@ -319,37 +370,74 @@ void Terminal::Cd(CLConstIt begin, CLConstIt end)
     case 0:
       current_ = CurDirT{&root_};
       break;
-    default:
-      Entry* e = Get(*begin);
+    case 1:
+    {  Entry* e = Get(*begin);
       if (e == nullptr)
       {
-        out_ << "cd: " << *begin << ": is not a file or direcory" << std::endl;
+        out_ << "cd: " << func::InQuotes(*begin) << ": is not a file or direcory" 
+          << std::endl;
         return;
       }
+      
       try
       {
         current_ = &dynamic_cast<Directory&>(*e);
       }
       catch (std::bad_cast)
       {
-        out_ << "cd: " << *begin << ": is not a direcory" << std::endl;
+        out_ << "cd: " << func::InQuotes(*begin) << ": is not a direcory" 
+          << std::endl;
       }
+      break;
+    }
+    default:
+      out_ << "cd: too many arguments" << std::endl;
   }
 }
+
 void Terminal::Cat(CLConstIt begin, CLConstIt end) const
 {
+  if (!(end - begin))
+  {
+    out_ << "cat: first argument not passed" << std::endl;
+    return;
+  }
+  
   std::for_each(begin, end, [this](const std::string& path)
   {
     const Entry* e = Get(path);
-    if(e == nullptr)
+    if (e == nullptr)
     {
-      out_ << "cat: " << path << ": is not a file or directory\n";
+      out_ << "cat: " << func::InQuotes(path) << ": is not a file or directory\n";
     }
     else
     {
       out_ << e -> content();
     }
   });
+}
+void Terminal::Edit(CLConstIt begin, CLConstIt end)
+{
+  if (end - begin < 2)
+  {
+    out_ << "edit: 2 arguments was expected" << std::endl;
+    return;
+  }
+  if (end - begin > 2)
+  {
+    out_ << "edit: too many arguments was passed" << std::endl;
+    return;
+  }
+  
+  Entry* e = Get(*begin);
+  if (e == nullptr)
+  {
+    out_ << "edit: " << func::InQuotes(*begin) << ": is not a file or directory" 
+      << std::endl;
+    return;
+  }
+  
+  e -> edit(*++begin);
 }
 
 } // namespace term_emul

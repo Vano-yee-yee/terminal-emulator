@@ -35,6 +35,7 @@ std::vector<std::string> DelimPath(const std::string& path)
   std::vector<std::string> res;
   if (!path.size())
   {
+    res.push_back(path);
     return res;
   }
   
@@ -52,9 +53,9 @@ std::vector<std::string> DelimPath(const std::string& path)
   }
   return res;
 }
-std::string EscapeQuotes(const std::string& str)
+std::string InQuotes(const std::string& str)
 {
-  std::string res;
+  std::string res{"'"};
   bool in_quotes = true;
   std::for_each(str.cbegin(), str.cend(), [&res, &in_quotes](char sym)
   {
@@ -78,6 +79,10 @@ std::string EscapeQuotes(const std::string& str)
       res += sym;
     }
   });
+  if(in_quotes)
+  {
+    res += '\'';
+  }
   return res;
 }
 
