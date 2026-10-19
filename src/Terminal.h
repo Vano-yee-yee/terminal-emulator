@@ -15,11 +15,17 @@ namespace term_emul
 
 class Terminal
 {
+ public:
+  using CommandLine = std::vector<std::string>;
+  using CLIt = CommandLine::iterator;
+  using CLConstIt = CommandLine::const_iterator;
+  
+ private:
   RootDirectory root_;
   CurDirT current_;
   
-  mutable std::istream in_;
   mutable std::ostream out_;
+  mutable std::istream in_;
   
  public:
   Terminal(RootDirectory&& root = RootDirectory{}, 
@@ -28,23 +34,23 @@ class Terminal
   Terminal(const std::ostream& out, const std::istream& in = std::cin);
   Terminal(const std::istream& in);
   
-  Terminal(Terminal&) = delete;
+  Terminal(const Terminal&) = delete;
   Terminal& operator=(const Terminal&) = delete;
   Terminal(Terminal&&) = delete;
   Terminal& operator=(Terminal&&) = delete;
   
  private:
-  bool ParseCommand(std::vector<std::string>& command) const;
+  bool ParseCommand(CommandLine& command) const;
   Entry* Get(const std::string& path);
   const Entry* Get(const std::string& path) const;
   
   void Help() const noexcept;
-  void Ls(std::vector<std::string>::const_iterator begin, 
-    std::vector<std::string>::const_iterator end, bool hidden = false,
-      DisplaySort sort = DisplaySort::kAsceding) const;
+  void Ls(CLConstIt begin, CLConstIt end) const;
+  void Cd(CLConstIt begin, CLConstIt end);
   
  public:
-  void Run();
+   void Run();
+//  void Run() const;
 };
 
 } // namespace term_emul

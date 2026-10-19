@@ -5,6 +5,7 @@
 #include <istream>
 #include <ostream> // ostream endl
 #include <string> // string getline
+#include <typeinfo> // bad_cast
 #include <utility> // move
 #include <vector>
 
@@ -17,7 +18,7 @@ namespace term_emul
 
 Terminal::Terminal(RootDirectory&& root, const std::ostream& out, 
   const std::istream& in)
-: root_(std::move(root)), current_(&root_), in_(in.rdbuf()), out_(out.rdbuf())
+: root_(std::move(root)), current_(&root_), out_(out.rdbuf()), in_(in.rdbuf())
 {}
 Terminal::Terminal(const std::ostream& out, const std::istream& in)
 : Terminal(RootDirectory{}, out, in)
@@ -28,7 +29,7 @@ Terminal::Terminal(const std::istream& in)
 
 void Terminal::Run()
 {
-  for (std::vector<std::string> cl; 
+  for (CommandLine cl; 
     out_ << current_ -> DisplayName() << " # ", ParseCommand(cl);
     cl.resize(0))
   {
@@ -44,7 +45,11 @@ void Terminal::Run()
       }
       else if (cl[0] == "ls")
       {
-        Ls(++cl.cbegin(), cl.cend());
+        Ls(++cl.begin(), cl.cend());
+      }
+      else if (cl[0] == "cd")
+      {
+        Cd(++cl.begin(), cl.end());
       }
       else
       {
@@ -77,7 +82,7 @@ void Terminal::Help() const noexcept
     << std::endl;
 }
 
-bool Terminal::ParseCommand(std::vector<std::string>& command) const
+bool Terminal::ParseCommand(CommandLine& command) const
 {
   std::string el_buf;
   enum class State{kNone = 0, kQuot, kDquot, kEsc} st = State::kNone;
@@ -130,7 +135,7 @@ bool Terminal::ParseCommand(std::vector<std::string>& command) const
           switch (st)
           {
             case State::kNone:
-              if(el_buf.size())
+              if (el_buf.size())
               {
                 command.push_back(el_buf);
                 el_buf.resize(0);
@@ -202,20 +207,47 @@ bool Terminal::ParseCommand(std::vector<std::string>& command) const
   return static_cast<bool>(in_);
 }
 
-void Terminal::Ls(std::vector<std::string>::const_iterator begin, 
-  std::vector<std::string>::const_iterator end, bool hidden, DisplaySort sort) const
+void Terminal::Ls(CLConstIt begin, CLConstIt end) const
 {
-  switch(end - begin)
+  bool hidden = false;
+  DisplaySort sort = DisplaySort::kAsceding;
+  for (; begin != end && begin -> size() && (*begin)[0] == '-'; ++begin)
+  {
+    auto&& el = *begin;
+    if (el == "-a" || el == "--all")
+    {
+      hidden = true;
+    }
+    else if (el == "-c" || el == "--asc")
+    {
+      sort = DisplaySort::kAsceding;
+    }
+    else if (el == "-d" || el == "--desc")
+    {
+      sort = DisplaySort::kDesceding;
+    }
+    else if (el == "-n" || el == "--none")
+    {
+      sort = DisplaySort::kNone;
+    }
+    else
+    {
+      out_ << "ls: unknown parameter " << el << std::endl;
+      return;
+    }
+  }
+  
+  switch (end - begin)
   {
     case 0:
-      out_ << (*current_) << std::endl;
+      out_ << current_ -> Display(hidden, sort) << std::endl;
       break;
     case 1:
       {
         const Entry* elem = Get(*begin);
-        if(elem == nullptr)
+        if (elem == nullptr)
         {
-          out_ << "ls: " << (*begin) << ": is not a file or directory" << std::endl;
+          out_ << "ls: " << *begin << ": is not a file or directory" << std::endl;
         }
         else
         {
@@ -227,7 +259,7 @@ void Terminal::Ls(std::vector<std::string>::const_iterator begin,
       std::for_each(begin, end, [this, &hidden, &sort](const std::string& path)
       {
         const Entry* elem = Get(path);
-        if(elem == nullptr)
+        if (elem == nullptr)
         {
           out_ << "ls: " << path << ": is not a file or directory\n";
         }
@@ -259,7 +291,7 @@ Entry* Terminal::Get(const std::string& path)
   {
     if (*it == "..")
     {
-      if(res -> back() != nullptr)
+      if (res -> back() != nullptr)
       {
         res = res -> back();
       }
@@ -274,6 +306,31 @@ Entry* Terminal::Get(const std::string& path)
 const Entry* Terminal::Get(const std::string& path) const
 {
   return const_cast<Terminal*>(this) -> Get(path);
+}
+
+void Terminal::Cd(CLConstIt begin, CLConstIt end)
+{
+  switch (end - begin)
+  {
+    case 0:
+      current_ = CurDirT{&root_};
+      break;
+    default:
+      Entry* e = Get(*begin);
+      if (e == nullptr)
+      {
+        out_ << "cd: " << *begin << ": is not a file or direcory" << std::endl;
+        return;
+      }
+      try
+      {
+        current_ = &dynamic_cast<Directory&>(*e);
+      }
+      catch (std::bad_cast)
+      {
+        out_ << "cd: " << *begin << ": is not a direcory" << std::endl;
+      }
+  }
 }
 
 } // namespace term_emul

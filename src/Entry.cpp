@@ -109,7 +109,7 @@ void Entry::Unhide()
 std::string Entry::DisplayName() const
 {
   std::string res = std::string("'") + func::EscapeQuotes(name_);
-  if (*(--res.end()) != '\'')
+  if (*--res.end() != '\'')
   {
     res += '\'';
   }
@@ -187,7 +187,7 @@ bool Entry::operator!=(const Entry& ent) const
 std::string Entry::DisplayFullName() const
 {
   std::string res = std::string("'") + func::EscapeQuotes(FullName());
-  if (*(--res.end()) != '\'')
+  if (*--res.end() != '\'')
   {
     res += '\'';
   }
@@ -206,7 +206,7 @@ Entry& Entry::operator[](const std::string& name)
   {
     std::string msg{"Element '"};
     msg += func::EscapeQuotes(name);
-    if (*(--msg.end()) != '\'')
+    if (*--msg.end() != '\'')
     {
       msg += '\'';
     }
