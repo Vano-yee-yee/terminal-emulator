@@ -59,10 +59,6 @@ void Terminal::Run()
       {
         Edit(++cl.cbegin(), cl.cend());
       }
-      else if(cl[0] == "touch")
-      {
-        Touch(++cl.cbegin(), cl.cend());
-      }
       else
       {
         out_ << func::InQuotes(cl[0]) << ": unknown command. Use help to show possible commands" 
