@@ -24,11 +24,12 @@ class Entry
   
   Entry(const std::string& name, CurDirT current_dir = nullptr);
   
+ public:
   Entry() = delete;
   Entry(const Entry& other, CurDirT current_dir = nullptr);
-  Entry& operator=(const Entry& other) = default;
+  Entry& operator=(const Entry&) = default;
   Entry(Entry&& other, CurDirT current_dir = nullptr) noexcept;
-  Entry& operator=(Entry&& other) noexcept = default;
+  Entry& operator=(Entry&&) noexcept = default;
   virtual ~Entry() = default;
   
   const std::string& name() const & noexcept;

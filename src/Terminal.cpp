@@ -30,7 +30,7 @@ Terminal::Terminal(const std::istream& in)
 void Terminal::Run()
 {
   for (CommandLine cl; 
-    out_ << current_ -> DisplayName() << " # ", ParseCommand(cl);
+    out_ << ' ' << current_ -> DisplayName() << " # ", ParseCommand(cl);
     cl.resize(0))
   {
     if (cl.size())
@@ -50,6 +50,10 @@ void Terminal::Run()
       else if (cl[0] == "cd")
       {
         Cd(++cl.begin(), cl.end());
+      }
+      else if (cl[0] == "cat")
+      {
+        Cat(++cl.begin(), cl.end());
       }
       else
       {
@@ -331,6 +335,21 @@ void Terminal::Cd(CLConstIt begin, CLConstIt end)
         out_ << "cd: " << *begin << ": is not a direcory" << std::endl;
       }
   }
+}
+void Terminal::Cat(CLConstIt begin, CLConstIt end) const
+{
+  std::for_each(begin, end, [this](const std::string& path)
+  {
+    const Entry* e = Get(path);
+    if(e == nullptr)
+    {
+      out_ << "cat: " << path << ": is not a file or directory\n";
+    }
+    else
+    {
+      out_ << e -> content();
+    }
+  });
 }
 
 } // namespace term_emul

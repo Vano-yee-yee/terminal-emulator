@@ -27,7 +27,7 @@ Entry::Entry(const std::string& name, CurDirT current_dir)
   }
 }
 Entry::Entry(const Entry& other, CurDirT current_dir)
-: name_(other.name_)
+: name_(other.name_), text_(other.text_)
 {
   if (current_dir == nullptr)
   {
@@ -39,7 +39,7 @@ Entry::Entry(const Entry& other, CurDirT current_dir)
   }
 }
 Entry::Entry(Entry&& other, CurDirT current_dir) noexcept
-: name_(std::move(other.name_))
+: name_(std::move(other.name_)), text_(std::move(other.text_))
 {
   if (current_dir == nullptr)
   {

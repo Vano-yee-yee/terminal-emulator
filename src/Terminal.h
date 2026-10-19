@@ -47,6 +47,7 @@ class Terminal
   void Help() const noexcept;
   void Ls(CLConstIt begin, CLConstIt end) const;
   void Cd(CLConstIt begin, CLConstIt end);
+  void Cat(CLConstIt begin, CLConstIt end) const;
   
  public:
    void Run();
